@@ -179,6 +179,41 @@ python3 -m unittest discover -s tests -v
 These commands use only the Python standard library. The tests mock remote
 operations; they do not sign in, deploy resources or invoke an agent.
 
+## Public-preview verification
+
+The compatibility update was physically checked on **October 28, 2026** using
+azd 1.37.1, Foundry bundle 1.0.0-beta.4, agent extension 1.0.0-beta.22,
+projects 1.0.0-beta.15 and Skills 1.0.0-beta.9.
+
+| Agent | Actual verification |
+|-------|---------------------|
+| Company research | One Web IQ request; existing Skill and calculator executed; all three delivered files independently re-fetched and checked |
+| Retail analysis | Four real stages; arithmetic, source-cell and claim-update checks; all eight delivered files independently re-fetched |
+| Model comparison | One readiness and one implementation request with Sol6.1; delivered code passed 43/43 Docker checks; both responses and their files independently audited |
+
+These were **seven requests with no client resubmissions**, against three
+distinct new Microsoft-harness agents in the existing projects. Existing
+agents and model deployments were preserved. Web IQ, Skill content, task
+instructions, data policies, fixtures and graders were unchanged.
+
+The checks used an owner-created clean Git-only export of
+[compatibility source commit 150bcec](https://github.com/AshuJoshi/foundry-copilot-harness/commit/150bceca63fa762d09549043a846e4ce5f03c05f),
+which also passed **132 offline tests without skips**, including the actual
+Docker grader controls. Research was initially deployed from the preceding
+compatibility commit and verified against this corrected source without a
+redeployment; its definition was unchanged. The correction handles the API's
+persisted MCP allow-list representation, not a tool-permission change.
+
+Retail reused previously prepared, pinned data after verifying its hashes and
+references; this check did not download or rebuild the workbook. The tooling
+was upgraded in an existing environment, not installed on a fresh machine.
+These checks do not rerun or supersede the
+[dated nine-model battery](agents/model-comparison/RESULTS.md). Mechanical
+output checks do not certify every narrative claim.
+
+Raw verification responses, reports and logs remain under ignored `.local/`.
+Only this authored verification summary belongs in source control.
+
 ## License
 
 Source code and documentation are available under the [MIT license](LICENSE).

@@ -9,6 +9,9 @@ authors new agents with the Microsoft-named public-preview contract. A quick
 compatibility check is not a rerun of this nine-model battery; these scores
 and measurements remain the original point-in-time results.
 
+The subsequent [public-preview compatibility check](../../README.md#public-preview-verification)
+is recorded separately and is not included in the scores below.
+
 Sol6.1, Astra, Terra5.6 and Terra6.1 met all 18 task-output contracts in this
 battery. Other configurations exposed differences in structured delivery,
 calculation and whether a requested file was delivered.

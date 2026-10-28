@@ -385,6 +385,11 @@ retrievals, but its report should explain the missing coverage.
 
 ## Run the offline tests
 
+The [public-preview verification summary](../../README.md#public-preview-verification)
+records the upgraded-tooling check: one actual Web IQ research request,
+the unchanged published Skill and packaged calculator, and three independently
+re-fetched files. This is separate from the authored fictional output previews.
+
 ```bash
 python3 -m unittest discover -s tests -v
 ```

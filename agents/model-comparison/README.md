@@ -245,6 +245,10 @@ Docker grader. It stops on a failure and never retries a request. Results stay
 in the separate `smoke/` directory, not the full-battery report. It neither
 reruns the nine-model battery nor changes the historical result scores.
 
+The [public-preview verification summary](../../README.md#public-preview-verification)
+records a successful two-request check with Sol6.1 and the upgraded CLI,
+including the independent file audit and 43/43 implementation checks.
+
 ## 4. Run the full battery
 
 This command authorizes paid requests up to the exact prepared maximum:

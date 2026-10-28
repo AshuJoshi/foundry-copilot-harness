@@ -288,6 +288,12 @@ prior-claim accounting. Review the report as well:
 
 ## Troubleshooting and cleanup
 
+The [public-preview verification summary](../../README.md#public-preview-verification)
+records the upgraded-tooling check of all four stages and eight actual output
+files. In that run, the unchanged-data control preserved the metrics and all
+five final claim objects. This observation is for that run, not a guarantee
+that every future report will be byte-identical.
+
 | Symptom | Action |
 |---------|--------|
 | ZIP/workbook hash mismatch | Keep the failure record; check whether the public source changed rather than disabling the hash check |
