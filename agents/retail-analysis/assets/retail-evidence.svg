@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="515" viewBox="0 0 1120 515" role="img" aria-labelledby="title description">
+<title id="title">Retail weekly transaction-value evidence</title>
+<desc id="description">Four observed equal-week totals and the independently checked final-week arithmetic.</desc>
+<rect width="1120" height="515" fill="#ffffff"/>
+<g font-family="Arial, sans-serif">
+<text x="30" y="36" font-size="25" fill="#132b42">Retail: changing evidence, not invented causes</text>
+<text x="30" y="64" font-size="15" fill="#132b42">Derived GBP transaction value per equal seven-day window; not profit or audited revenue.</text>
+<path d="M100 365 H1080" stroke="#dce4ec"/>
+<text x="10" y="370" font-size="14" fill="#132b42">0</text>
+<path d="M100 282 H1080" stroke="#dce4ec"/>
+<text x="10" y="287" font-size="14" fill="#132b42">100,000</text>
+<path d="M100 199 H1080" stroke="#dce4ec"/>
+<text x="10" y="204" font-size="14" fill="#132b42">200,000</text>
+<path d="M100 115 H1080" stroke="#dce4ec"/>
+<text x="10" y="120" font-size="14" fill="#132b42">300,000</text>
+<rect x="160" y="143" width="130" height="222" fill="#176c91"/>
+<text x="154" y="129" font-size="17" fill="#132b42">GBP 266,525.93</text>
+<text x="172" y="392" font-size="17" fill="#132b42">baseline</text>
+<rect x="395" y="170" width="130" height="195" fill="#176c91"/>
+<text x="389" y="156" font-size="17" fill="#132b42">GBP 234,432.70</text>
+<text x="407" y="392" font-size="17" fill="#132b42">week-1</text>
+<rect x="630" y="151" width="130" height="214" fill="#176c91"/>
+<text x="624" y="137" font-size="17" fill="#132b42">GBP 257,235.79</text>
+<text x="642" y="392" font-size="17" fill="#132b42">week-2</text>
+<rect x="865" y="190" width="130" height="175" fill="#176c91"/>
+<text x="859" y="176" font-size="17" fill="#132b42">GBP 210,426.44</text>
+<text x="877" y="392" font-size="17" fill="#132b42">week-3</text>
+<text x="30" y="433" font-size="16" fill="#132b42">Week 3: -58,550.58 positive value + 11,741.23 credit-magnitude offset = -46,809.35 net.</text>
+<text x="30" y="463" font-size="15" fill="#132b42">Recorded control: identical final evidence; all six claims retained. No new agent call in this replay.</text>
+<text x="30" y="491" font-size="14" fill="#132b42">Source: UCI Online Retail II (CC BY 4.0), selected UK weeks in 2010. Transaction values, not profit.</text>
+</g>
+</svg>

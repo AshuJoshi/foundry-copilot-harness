@@ -1,0 +1,14 @@
+{
+  "sku": {
+    "name": "DataZoneStandard",
+    "capacity": 100
+  },
+  "properties": {
+    "model": {
+      "format": "OpenAI",
+      "name": "gpt-6.1-terra",
+      "version": "2026-10-26"
+    },
+    "versionUpgradeOption": "NoAutoUpgrade"
+  }
+}

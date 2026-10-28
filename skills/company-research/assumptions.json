@@ -1,0 +1,9 @@
+{
+  "label": "Illustrative assumptions only; not company actuals or forecasts",
+  "currency": "USD",
+  "scenarios": [
+    {"name": "downside", "monthly_attempts": 10000, "success_rate": 0.70, "price_per_success": 0.06, "cost_per_attempt": 0.025, "fixed_cost_monthly": 200},
+    {"name": "base", "monthly_attempts": 10000, "success_rate": 0.85, "price_per_success": 0.06, "cost_per_attempt": 0.018, "fixed_cost_monthly": 200},
+    {"name": "upside", "monthly_attempts": 10000, "success_rate": 0.95, "price_per_success": 0.06, "cost_per_attempt": 0.012, "fixed_cost_monthly": 200}
+  ]
+}

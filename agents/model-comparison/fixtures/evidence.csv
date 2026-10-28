@@ -1,0 +1,5 @@
+row_id,period,quantity,unit_price
+e01,P1,10,100
+e02,P1,-1,100
+e03,P2,8,100
+e04,P2,-1,20

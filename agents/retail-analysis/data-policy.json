@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "dataset": "UCI Online Retail II",
+  "doi": "10.24432/C5CG6D",
+  "url": "https://archive.ics.uci.edu/static/public/502/online+retail+ii.zip",
+  "archive_bytes": 45622418,
+  "archive_sha256": "572e36277c2390fbfde10664750731e0a86f55e33470d91919085f0408e67bfb",
+  "workbook": "online_retail_II.xlsx",
+  "workbook_bytes": 45622278,
+  "workbook_sha256": "bcbe73b35f5b7babf197fb0cb983a11f5d9ff929078d4aa53d171b1f2df2e980",
+  "country": "United Kingdom",
+  "source_sheet_rows": {"Year 2009-2010": 525461, "Year 2010-2011": 541910},
+  "periods": [
+    {"id": "baseline", "start": "2010-09-27T00:00:00", "end": "2010-10-04T00:00:00"},
+    {"id": "week-1", "start": "2010-10-04T00:00:00", "end": "2010-10-11T00:00:00"},
+    {"id": "week-2", "start": "2010-10-11T00:00:00", "end": "2010-10-18T00:00:00"},
+    {"id": "week-3", "start": "2010-10-18T00:00:00", "end": "2010-10-25T00:00:00"}
+  ],
+  "stages": [
+    {"id": "stage-1", "visible_periods": ["baseline", "week-1"]},
+    {"id": "stage-2", "visible_periods": ["baseline", "week-1", "week-2"]},
+    {"id": "stage-3", "visible_periods": ["baseline", "week-1", "week-2", "week-3"]},
+    {"id": "stable-control", "same_evidence_as": "stage-3"}
+  ],
+  "metric_policy": {
+    "currency": "GBP",
+    "money_representation": "Exact Decimal strings, no per-line or aggregate rounding",
+    "included_rows": "Finite positive unit price and nonzero integer quantity; signed amounts retained",
+    "excluded_rows": "Missing/invalid/nonpositive price or missing/invalid/zero quantity; retain rows and explicit exclusion reason",
+    "gross_positive_value": "Sum quantity * unit_price where included quantity is positive",
+    "negative_value_magnitude": "Absolute sum quantity * unit_price where included quantity is negative",
+    "net_transaction_value": "gross_positive_value minus negative_value_magnitude; not recognized revenue, profit or cash flow",
+    "cancellation": "Invoice starts with C, case insensitive; report separately from quantity sign",
+    "duplicates": "Preserved, not silently deduplicated",
+    "missing_customer_id": "Retained; not assigned fabricated identities",
+    "late_credit_linkage": "No original-sale matching is assumed"
+  }
+}

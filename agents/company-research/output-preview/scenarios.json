@@ -1,0 +1,62 @@
+{
+  "label": "Illustrative assumptions only; not company actuals or forecasts",
+  "currency": "USD",
+  "assumptions": [
+    {
+      "name": "downside",
+      "monthly_attempts": 10000,
+      "success_rate": 0.7,
+      "price_per_success": 0.06,
+      "cost_per_attempt": 0.025,
+      "fixed_cost_monthly": 200
+    },
+    {
+      "name": "base",
+      "monthly_attempts": 10000,
+      "success_rate": 0.85,
+      "price_per_success": 0.06,
+      "cost_per_attempt": 0.018,
+      "fixed_cost_monthly": 200
+    },
+    {
+      "name": "upside",
+      "monthly_attempts": 10000,
+      "success_rate": 0.95,
+      "price_per_success": 0.06,
+      "cost_per_attempt": 0.012,
+      "fixed_cost_monthly": 200
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "downside",
+      "successful_executions": 7000.0,
+      "revenue": 420.0,
+      "variable_cost": 250.0,
+      "gross_profit": 170.0,
+      "gross_margin_percent": 40.48,
+      "contribution_after_fixed": -30.0,
+      "break_even_success_rate": 0.75
+    },
+    {
+      "name": "base",
+      "successful_executions": 8500.0,
+      "revenue": 510.0,
+      "variable_cost": 180.0,
+      "gross_profit": 330.0,
+      "gross_margin_percent": 64.71,
+      "contribution_after_fixed": 130.0,
+      "break_even_success_rate": 0.6333
+    },
+    {
+      "name": "upside",
+      "successful_executions": 9500.0,
+      "revenue": 570.0,
+      "variable_cost": 120.0,
+      "gross_profit": 450.0,
+      "gross_margin_percent": 78.95,
+      "contribution_after_fixed": 250.0,
+      "break_even_success_rate": 0.5333
+    }
+  ]
+}

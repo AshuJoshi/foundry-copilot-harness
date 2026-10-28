@@ -1,0 +1,15 @@
+Online Retail II, Daqing Chen, UCI Machine Learning Repository.
+DOI: https://doi.org/10.24432/C5CG6D
+Source: https://archive.ics.uci.edu/dataset/502/online+retail+ii
+License declared on the dataset page: Creative Commons Attribution 4.0
+International, https://creativecommons.org/licenses/by/4.0/
+
+Derived pilot: original United Kingdom invoice lines in four fixed seven-day
+windows in September/October 2010; source workbook/sheet/row identifiers added;
+timestamps and values serialized to CSV; exclusion flags and period labels added.
+Rows are preserved, including duplicates, cancellations and missing values.
+No synthetic transactions, inventory, shipments, costs or cancellation reasons
+are generated. Stage snapshots reveal chronological subsets only.
+No endorsement by the data creator or UCI is implied.
+This is historical non-store retail data, not current company reporting,
+audited revenue, payment settlement, profit or a supply-chain event ledger.

@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "models": [
+    {"id": "sol61", "deployment": "__SOL61_DEPLOYMENT__"},
+    {"id": "astra", "deployment": "__ASTRA_DEPLOYMENT__"},
+    {"id": "kimi-k3", "deployment": "__KIMI_DEPLOYMENT__"},
+    {"id": "glm53", "deployment": "__GLM_DEPLOYMENT__"},
+    {"id": "deepseek-flash", "deployment": "__DEEPSEEK_DEPLOYMENT__"},
+    {"id": "grok47", "deployment": "__GROK_DEPLOYMENT__"},
+    {"id": "terra56", "deployment": "__TERRA56_DEPLOYMENT__"},
+    {"id": "luna56", "deployment": "__LUNA56_DEPLOYMENT__"},
+    {"id": "terra61", "deployment": "__TERRA61_DEPLOYMENT__"}
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "full_repetitions": 3,
+  "invocation_deadline_seconds": 420,
+  "boundary": "Use only this task and its supplied files. Do not browse, use the network, install packages, delegate to subagents, inspect unrelated project data or modify external systems. You may choose an appropriate direct or tool-based method. No private chain-of-thought is requested.",
+  "cases": [
+    {
+      "id": "compute",
+      "family": "exact-computation",
+      "prompt": "Answer three questions: how many prime numbers are below 1,000,000; what is 48271 multiplied by 79613; and what is 7^77 mod 1,000,003? Return only one JSON object with exactly these integer fields: prime_count, product, modular_power. Do not include an explanation or markdown.",
+      "inputs": [],
+      "output": {
+        "kind": "json"
+      }
+    },
+    {
+      "id": "constraints",
+      "family": "constraint-reasoning",
+      "prompt": "Assign jobs A,B,C,D one-to-one to depots X,Y,Z,W at minimum total cost. In X,Y,Z,W order, costs are A:[9,2,7,8], B:[6,4,3,7], C:[5,8,1,8], D:[7,6,9,4]. A cannot use Z, B cannot use X, C cannot use Y, D cannot use Z. Return only JSON with exactly assignment (object mapping each job to a depot) and total_cost (integer). Do not include reasoning or markdown.",
+      "inputs": [],
+      "output": {
+        "kind": "json"
+      }
+    },
+    {
+      "id": "transform",
+      "family": "structured-file-transformation",
+      "prompt": "Read transform.csv. Preserve every source row including identical quantity/price rows with different row_id. Parse quantity and unit_price as exact Decimal values. Exclude nonfinite/unparseable numbers first (reason invalid_number); otherwise exclude zero/noninteger quantity (invalid_quantity); otherwise exclude price <=0 (nonpositive_price). Included negative quantities reduce signed value. Return only JSON with exactly valid_rows (integer), excluded_rows (array of objects with exactly row_id/reason, in input order), categories (object keyed by exact category, each with rows integer and net Decimal string, included rows only), and net (total Decimal string). No rounding, markdown or other fields.",
+      "inputs": [
+        "transform.csv"
+      ],
+      "output": {
+        "kind": "json"
+      }
+    },
+    {
+      "id": "implement",
+      "family": "code-implementation",
+      "prompt": "Implement normalize_intervals(intervals) in solution.py for Python3.12, standard library only. Input is a list or tuple of two-item list/tuple pairs of integers (bool is not an integer for this task). Each start must be <=end. Invalid inputs must raise ValueError, including None, strings, malformed pairs, reversed bounds and boolean endpoints. Return sorted merged overlapping closed intervals as a list of two-item lists; do not merge merely adjacent intervals ([1,2] and [3,4] stay separate). Preserve the caller's input unchanged. Empty input returns []. The supplied implementation_starter.py is a stub. Upload exactly solution.py as a Foundry output file; a prose link or code block is not a delivered file. You may test your implementation but do not install dependencies.",
+      "inputs": [
+        "implementation_starter.py"
+      ],
+      "output": {
+        "kind": "code",
+        "filename": "solution.py",
+        "function": "normalize_intervals"
+      }
+    },
+    {
+      "id": "debug",
+      "family": "code-debugging",
+      "prompt": "Repair reconcile(rows) in debugging_starter.py and upload exactly solution.py for Python3.12, standard library only. Input is a list/tuple of dict records with exactly id/account/amount_cents. id and account are nonempty strings; amount_cents is an integer excluding bool. Invalid input raises ValueError. Sum signed amounts per account; preserve zero totals. A repeated id with identical account/amount is counted once; the same id with conflicting account or amount raises ValueError. The function must not mutate input. Empty input returns {}. Preserve the public function name reconcile. Deliver the actual uploaded solution.py file, not a code block. You may run tests; no package installation.",
+      "inputs": [
+        "debugging_starter.py"
+      ],
+      "output": {
+        "kind": "code",
+        "filename": "solution.py",
+        "function": "reconcile"
+      }
+    },
+    {
+      "id": "evidence",
+      "family": "evidence-grounded-business-judgment",
+      "prompt": "Read the explicitly synthetic diagnostic evidence.csv. Signed transaction value is quantity*unit_price; negative values are credits, with no reasons supplied. No costs, shipments or profit data are supplied. Classify these claims: A=Net transaction value increased from P1 to P2. B=The net decline was arithmetically due to an increase in negative-line magnitude. C=Profit decreased. D=The negative P2 line establishes a shipment failure. E=P2 net value is lower while its lower negative-line magnitude offsets part of a larger positive-value fall. Return only JSON with exactly net_values (P1/P2 Decimal strings), verdicts (A..E, each supported/contradicted/not_established), evidence (all four rows as objects with exactly row_id/quantity/unit_price, copying complete exact CSV strings), and limitations (nonempty array of bounded missing-evidence statements). Do not invent causes or execute business actions.",
+      "inputs": [
+        "evidence.csv"
+      ],
+      "output": {
+        "kind": "json"
+      }
+    }
+  ],
+  "battery_sha256": "09c86c3e2eb9018ff7f533385b8023cb1e08d23549bdc548d83f0885494a77f8",
+  "fixtures_sha256": {
+    "debugging_starter.py": "83f36ea3d7bf34331a9f9ab86602b8b391c5cf083b62318dc4859f65c8d839a8",
+    "evidence.csv": "06610f45ae7c782d85f19e00c882b4d8b214750af79476ed09a2e08925dc2381",
+    "implementation_starter.py": "1a4ba2c1f75885ca09791bebbc4c2f9b96503d137846ad5d256f9e10309fb431",
+    "transform.csv": "4557df255bfdbccb3765a282401ac2bfb6f3ef389d72bbd648ba6d02efc94b4c"
+  }
+}

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="445" viewBox="0 0 1120 445" role="img" aria-labelledby="title description">
+<title id="title">Retail architecture and evidence flow</title>
+<desc id="description">Three bounded roles: prepared inputs, managed agent execution, and independent checking with no operational writes.</desc>
+<rect width="1120" height="445" fill="#ffffff"/>
+<g font-family="Arial, sans-serif">
+<text x="30" y="38" font-size="25" fill="#132b42">Retail analyst: execution with an independent check</text>
+<text x="30" y="68" font-size="16" fill="#132b42">Advisory workflow. No pricing, customer communication or system-of-record writes.</text>
+<rect x="30" y="110" width="290" height="160" rx="12" fill="#edf5fa" stroke="#176c91"/>
+<text x="46" y="142" font-size="19" fill="#132b42">1. Prepared evidence</text>
+<text x="46" y="177" font-size="14" fill="#132b42">Current CSV + policy + binding</text>
+<text x="46" y="204" font-size="14" fill="#132b42">Exact public-source row identities</text>
+<text x="46" y="231" font-size="14" fill="#132b42">Prior report attached on updates</text>
+<rect x="415" y="110" width="290" height="160" rx="12" fill="#edf5fa" stroke="#176c91"/>
+<text x="431" y="142" font-size="19" fill="#132b42">2. Managed agent</text>
+<text x="431" y="177" font-size="14" fill="#132b42">Prompt agent + Copilot harness</text>
+<text x="431" y="204" font-size="14" fill="#132b42">Inspect, hash, calculate with Decimal</text>
+<text x="431" y="231" font-size="14" fill="#132b42">Upload actual JSON + Markdown</text>
+<rect x="800" y="110" width="290" height="160" rx="12" fill="#edf5fa" stroke="#176c91"/>
+<text x="816" y="142" font-size="19" fill="#132b42">3. Independent checks</text>
+<text x="816" y="177" font-size="14" fill="#132b42">Download and recompute from rows</text>
+<text x="816" y="204" font-size="14" fill="#132b42">Check exact cells + claim dispositions</text>
+<text x="816" y="231" font-size="14" fill="#132b42">Human review: causes and limitations</text>
+<path d="M328 185 H403 l-12 -7 m12 7 l-12 7" fill="none" stroke="#176c91" stroke-width="3"/>
+<path d="M713 185 H788 l-12 -7 m12 7 l-12 7" fill="none" stroke="#176c91" stroke-width="3"/>
+<text x="30" y="315" font-size="18" fill="#132b42">Stage 1: 24,491 rows  -&gt;  Stage 2: 37,509  -&gt;  Stage 3: 50,947  -&gt;  Same-evidence control</text>
+<text x="30" y="350" font-size="17" fill="#132b42">Retain / revise / withdraw prior claims with evidence. Keep evaluator references outside agent input.</text>
+<text x="30" y="385" font-size="15" fill="#132b42">Recorded case: one conversation, two execution phases, 13,137-second idle gap; explicit file handoffs.</text>
+<text x="30" y="418" font-size="15" fill="#132b42">Managed harness supplies execution. The application owns policy, authorization, verification and decisions.</text>
+</g>
+</svg>

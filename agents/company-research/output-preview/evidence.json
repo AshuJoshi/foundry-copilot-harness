@@ -1,0 +1,38 @@
+{
+  "_preview": "Fictional documentation only. No Web IQ retrieval occurred. All titles, claims and timestamps are invented; example URLs are placeholders, not evidence.",
+  "company": "ExampleCo",
+  "sources": [
+    {
+      "id": "S1",
+      "url": "https://example.com/product",
+      "title": "ExampleCo product page (fictional)",
+      "source_type": "primary",
+      "claim": "In this fictional case, the company describes catalog extraction and a review queue.",
+      "retrieved_at": "2000-01-01T00:00:00Z"
+    },
+    {
+      "id": "S2",
+      "url": "https://example.com/pricing",
+      "title": "ExampleCo pricing page (fictional)",
+      "source_type": "primary",
+      "claim": "In this fictional case, the company describes usage-based billing.",
+      "retrieved_at": "2000-01-01T00:00:00Z"
+    },
+    {
+      "id": "S3",
+      "url": "https://example.org/exampleco-pilot",
+      "title": "ExampleCo catalog pilot (fictional)",
+      "source_type": "independent",
+      "claim": "A fictional trade article describes a pilot without measured performance data.",
+      "retrieved_at": "2000-01-01T00:00:00Z"
+    },
+    {
+      "id": "S4",
+      "url": "https://example.net/catalog-tools",
+      "title": "Catalog extraction tools (fictional)",
+      "source_type": "independent",
+      "claim": "A fictional comparison lists alternatives without reproducing a benchmark.",
+      "retrieved_at": "2000-01-01T00:00:00Z"
+    }
+  ]
+}

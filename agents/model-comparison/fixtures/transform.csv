@@ -1,0 +1,13 @@
+row_id,category,quantity,unit_price
+r01,A,3,2.10
+r02,B,-2,1.25
+r03,A,1,0
+r04,A,0,3.00
+r05,B,2,bad
+r06,"A, deluxe",2,1.05
+r07,A,1,4.20
+r08,B,1,-1
+r09,B,1,NaN
+r10,A,2,2.10
+r11,A,2,2.10
+r12,B,1.5,2.00
