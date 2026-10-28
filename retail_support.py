@@ -99,6 +99,8 @@ def verify_consumption(response: dict, command: str, expected: dict, *, allow_sh
 def definition_for_rest(definition: JsonObject) -> JsonObject:
     value = copy.deepcopy(definition)
     for tool in value.get("tools", []):
+        if tool.get("type") == "mcp" and isinstance(tool.get("allowed_tools"), list):
+            tool["allowed_tools"] = {"tool_names": tool["allowed_tools"]}
         if tool.get("type") in {"microsoft_copilot_toolset_preview", "github_copilot_toolset_preview"}:
             if "defaultConfig" in tool:
                 if "default_config" in tool:
@@ -122,7 +124,7 @@ def selected(client: HarnessClient, manifest: Path) -> dict:
                                            urllib.parse.quote(version, safe="")))
     expected = definition_for_rest({
         k: agent[k] for k in ["kind", "model", "harness", "instructions", "skills", "tools"] if k in agent})
-    actual = dict(result["definition"])
+    actual = definition_for_rest(result["definition"])
     for definition in [expected, actual]:
         if definition.get("tools") == []:
             definition.pop("tools")

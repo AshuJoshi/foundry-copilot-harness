@@ -157,6 +157,35 @@ class ComparisonTests(unittest.TestCase):
             with self.assertRaisesRegex(HarnessError, "differs"):
                 selected(client, folder / "azure.yaml")
 
+    def test_mcp_allowed_tool_names_normalize_without_changing_permissions(self):
+        authored = {"tools": [{"type": "mcp", "server_label": "webiq",
+                               "allowed_tools": ["web", "news", "browse"], "require_approval": "never"}]}
+        before = json.dumps(authored)
+        expected = definition_for_rest(authored)
+        self.assertEqual(expected["tools"][0]["allowed_tools"], {"tool_names": ["web", "news", "browse"]})
+        self.assertEqual(expected["tools"][0]["require_approval"], "never")
+        self.assertEqual(json.dumps(authored), before)
+        self.assertEqual(definition_for_rest(expected), expected)
+        configured = expected["tools"][0]
+        changed = definition_for_rest({"tools": [dict(configured, allowed_tools={"tool_names": ["web"]})]})
+        self.assertNotEqual(changed, expected)
+        manifest = study.render("https://example.services.ai.azure.com/api/projects/p",
+                                "one", "comparison", self.root / "mcp")
+        manifest["services"]["comparison"]["tools"] = authored["tools"]
+        path = self.root / "mcp/azure.yaml"
+        path.write_text(json.dumps(manifest))
+        client = HarnessClient("https://example.services.ai.azure.com/api/projects/p", "sub", "comparison")
+        for representation in [authored["tools"], expected["tools"]]:
+            definition = study.definition(manifest)
+            definition["tools"] = representation
+            record = {"version": "1", "status": "active", "definition": definition}
+            with patch.object(client, "_verified_version", return_value="1"), \
+                 patch.object(client, "get_agent", return_value={"versions": {"latest": record}}):
+                self.assertEqual(selected(client, path), record)
+                record["definition"]["tools"] = changed["tools"]
+                with self.assertRaisesRegex(HarnessError, "differs"):
+                    selected(client, path)
+
     def test_scored_prompt_and_inputs_do_not_leak_oracles_or_model_names(self):
         state = self.state(2)
         prompt, files = study.task_payload(state, "compute")

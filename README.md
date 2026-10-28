@@ -131,6 +131,9 @@ agent.
 - Copilot toolset settings use `defaultConfig` in `azure.yaml` and
   `default_config` in persisted REST definitions. The comparison checks
   normalize only that field and still verify the exact tool capabilities.
+- Web IQ's authored MCP `allowed_tools` list can be persisted as
+  `{"tool_names": [...]}`. Definition checks normalize that representation
+  while still requiring exactly the same allowed tools and approval setting.
 - The shared REST client sends `Foundry-Features: MicrosoftCopilot=V1Preview`.
   Responses remain agent-scoped, with explicit conversations and pinned versions.
 
