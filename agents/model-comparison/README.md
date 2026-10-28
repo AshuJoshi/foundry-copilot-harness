@@ -48,6 +48,14 @@ filesystem read/write and shell execution, with other Copilot toolsets disabled
 by default. The task boundary prohibits network access, package installation
 and delegation.
 
+New authoring uses `microsoft_copilot_preview` and
+`microsoft_copilot_toolset_preview`, with camelCase `defaultConfig` in the
+manifest. Persisted REST definitions use `default_config`; the checker
+normalizes that field without changing enabled capabilities. Existing legacy
+harness/toolset names remain readable. The client sends the current Microsoft
+preview header. These changes do not alter the battery, neutral instructions,
+fixtures, grader or expected answers.
+
 ## Choose the model deployments
 
 The [roster template](models.example.json) lists nine model labels:
@@ -190,6 +198,8 @@ This command creates agent versions and, if missing, project-scoped Foundry
 User assignments for their instance identities:
 
 ```bash
+export AZD_ALPHA_ENABLE_AGENTS_MANAGED_HARNESS=true
+
 python3 -m scripts.compare_models deploy \
   --study-dir .local/comparison-study \
   --allow-azure-writes \
@@ -207,6 +217,33 @@ It does not grant subscription-wide access.
 
 If deployment fails, inspect the saved records rather than rerunning it into
 the same study directory. A successful deployment is not a readiness result.
+
+### Optional two-request compatibility check
+
+For a quick deployment check rather than a full comparison, prepare a
+**one-model** roster with the same `prepare` command, using
+`--max-invocations 19` for its registered full schedule, and deploy a distinct
+new agent name. Do not run the full `run` command. Instead:
+
+```bash
+python3 -u -m scripts.compare_models smoke \
+  --study-dir .local/comparison-study \
+  --max-invocations 2 \
+  --allow-paid-invocations
+```
+
+```bash
+python3 -m scripts.compare_models audit \
+  --study-dir .local/comparison-study \
+  --run-kind smoke \
+  --output-dir .local/comparison-smoke-audit
+```
+
+This submits at most two requests: the existing file-execution readiness task
+and the existing implementation task, with the same independent 43-check
+Docker grader. It stops on a failure and never retries a request. Results stay
+in the separate `smoke/` directory, not the full-battery report. It neither
+reruns the nine-model battery nor changes the historical result scores.
 
 ## 4. Run the full battery
 

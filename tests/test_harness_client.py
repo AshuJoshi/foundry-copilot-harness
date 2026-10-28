@@ -148,6 +148,32 @@ class ClientTests(unittest.TestCase):
             with self.assertRaisesRegex(HarnessError, "not a Copilot"):
                 client.invoke("Hello")
 
+    def test_both_copilot_harness_families_are_verified_without_rewriting(self) -> None:
+        for harness in ["microsoft_copilot_preview", "github_copilot_preview"]:
+            definition = {"kind": "prompt", "harness": {"type": harness}}
+            agent = {"versions": {"latest": {
+                "version": "2", "status": "active", "definition": definition}}}
+            client = self.client()
+            with self.subTest(harness=harness), patch.object(client, "get_agent", return_value=agent):
+                self.assertEqual(client._verified_version(), "2")
+                self.assertEqual(definition["harness"]["type"], harness)
+
+    def test_requests_send_current_preview_header_without_changing_payload_or_retrying(self) -> None:
+        client = self.client()
+        body = {"conversation": "conv-test", "input": "test"}
+        for path, payload in [("/agents/agent", None), ("/agents/agent/endpoint/protocols/openai/responses", body),
+                              ("/files/file-test/content", None)]:
+            with self.subTest(path=path), patch.object(client._opener, "open") as opener:
+                opener.return_value.__enter__.return_value.read.return_value = b"{}"
+                self.assertEqual(client._request(path, payload), b"{}")
+                request = opener.call_args.args[0]
+                headers = {key.lower(): value for key, value in request.header_items()}
+                self.assertEqual(headers["foundry-features"], "MicrosoftCopilot=V1Preview")
+                self.assertEqual(headers["authorization"], "Bearer secret-token")
+                self.assertEqual(request.data, json.dumps(payload).encode() if payload is not None else None)
+                self.assertIn("api-version=v1", request.full_url)
+                opener.assert_called_once()
+
     def test_exact_download_and_no_overwrite(self) -> None:
         client = self.client()
         with tempfile.TemporaryDirectory() as directory:

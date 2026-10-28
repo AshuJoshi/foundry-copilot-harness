@@ -84,6 +84,18 @@ installation, inspect the installed versions before changing them. Follow the
 [extension guide](https://learn.microsoft.com/azure/developer/azure-developer-cli/extensions/overview)
 for azd compatibility requirements.
 
+The public-preview path requires azd 1.37.0+ and `azure.ai.agents`
+1.0.0-beta.22+. Use the current bundle, including `azure.ai.projects`
+1.0.0-beta.15+ and `azure.ai.skills` 1.0.0-beta.9+.
+Enable harness commands in every shell or CI job where you deploy:
+
+```bash
+export AZD_ALPHA_ENABLE_AGENTS_MANAGED_HARNESS=true
+```
+
+This is a CLI opt-in, not an Azure permission grant. Child deployment processes
+inherit it. Do not store credentials in the manifest or source.
+
 Check the commands before signing in or deploying:
 
 ```bash
@@ -101,13 +113,14 @@ If `azd ai skill` or `azd ai agent` is unavailable, check the installed Foundry
 extensions and their required azd version. Do not substitute an unrelated
 extension feed or proceed until the commands resolve.
 
-The live starter check used Python 3.12.3, Azure CLI 2.89.1, azd 1.35.1,
+The original live starter check used Python 3.12.3, Azure CLI 2.89.1, azd 1.35.1,
 Foundry bundle 1.0.0-beta.2, agents 1.0.0-beta.18, projects
 1.0.0-beta.13 and Skills 1.0.0-beta.8. The official registry currently offers
-newer versions; the latest bundle requires azd 1.37.0 or later.
-These are tested-version references, not a claim that the latest combination
-has been live-tested. The installation command and help checks were reviewed;
-a fresh tooling installation was not performed.
+newer versions. The compatibility update uses the upgraded azd 1.37.1,
+Foundry bundle beta.4, agents beta.22, projects beta.15 and Skills beta.9.
+Upgrading an existing installation is separate from verifying installation on
+a fresh machine. The original run is not evidence that the older tooling
+supports the new public-preview contract.
 
 ## Check the calculator locally
 
@@ -286,8 +299,13 @@ remote agent name. Use `azd deploy` for this definition, not `azd up` or
 `azd provision`, which can involve provisioning infrastructure.
 
 Check that the published record has the intended model, agent name, Skill
-version and `github_copilot_preview` harness. Record the active agent version
+version and `microsoft_copilot_preview` harness. Record the active agent version
 and its `instance_identity.principal_id`.
+
+The template creates a new Microsoft-harness agent. To keep an existing legacy
+agent, preserve its original discriminator; the client accepts both names.
+Do not attempt an in-place harness switch by deploying this template over it.
+The Web IQ connection, allowed tools and pinned Skill workflow are unchanged.
 
 ### 6. Grant file-output access
 

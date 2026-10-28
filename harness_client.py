@@ -20,6 +20,7 @@ from uuid import uuid4
 
 JsonObject = dict[str, Any]
 API_VERSION = "v1"
+COPILOT_HARNESSES = {"microsoft_copilot_preview", "github_copilot_preview"}
 MAX_DOWNLOAD_BYTES = 50 * 1024 * 1024
 UPLOAD_TOOL = "upload_file_from_workspace_to_foundry_project"
 
@@ -221,7 +222,8 @@ class HarnessClient:
         url = self.project_endpoint + path + "?" + urllib.parse.urlencode(parameters)
         req = urllib.request.Request(
             url, data=None if body is None else json.dumps(body).encode("utf-8"),
-            headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"},
+            headers={"Authorization": "Bearer " + token, "Content-Type": "application/json",
+                     "Foundry-Features": "MicrosoftCopilot=V1Preview"},
         )
         def observe(event: str, *, status: int | None = None, headers=None, size: int | None = None) -> None:
             if self.http_observer is None:
@@ -288,7 +290,7 @@ class HarnessClient:
             )
         definition = json_object(selected.get("definition"), "Agent definition")
         harness = json_object(definition.get("harness"), "Agent harness")
-        if definition.get("kind") != "prompt" or harness.get("type") != "github_copilot_preview":
+        if definition.get("kind") != "prompt" or harness.get("type") not in COPILOT_HARNESSES:
             raise HarnessError("Selected agent is not a Copilot-harness Prompt Agent.")
         if selected.get("status") != "active":
             raise HarnessError(f"Selected agent version is not active: {selected.get('status')}.")

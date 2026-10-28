@@ -119,7 +119,7 @@ class DocumentationTests(unittest.TestCase):
 
     def test_comparison_and_completion_commands_use_real_parser_flags(self):
         all_blocks = re.findall(r"```bash\n(.*?)```", COMPARISON_GUIDE.read_text(), re.S)
-        commands = [("compare_models", name) for name in ["prepare", "deploy", "run", "audit", "report"]]
+        commands = [("compare_models", name) for name in ["prepare", "deploy", "run", "smoke", "audit", "report"]]
         commands.append(("complete_comparison", ""))
         for module, command in commands:
             invocation = f"-m scripts.{module} " + (command + " " if command else "")

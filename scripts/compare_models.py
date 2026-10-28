@@ -18,7 +18,7 @@ import urllib.parse
 from uuid import uuid4
 
 from harness_client import HarnessClient, HarnessError, JsonObject, ResponseError, final_text
-from retail_support import hash_command, verify_consumption, RecordingClient, save, summarize, selected
+from retail_support import definition_for_rest, hash_command, verify_consumption, RecordingClient, save, summarize, selected
 from scripts.run_retail import normalized_output, wait_worker
 from model_comparison_eval import EvaluationInfrastructureError, grade_code, grade_json
 
@@ -117,7 +117,7 @@ def render(endpoint: str, model: str, agent: str, directory: Path) -> dict:
 
 def definition(manifest: dict) -> dict:
     agent = next(v for v in manifest["services"].values() if v["host"] == "azure.ai.agent")
-    return {k: agent[k] for k in ["kind", "model", "harness", "instructions", "tools"]}
+    return definition_for_rest({k: agent[k] for k in ["kind", "model", "harness", "instructions", "tools"]})
 
 
 def prepare(args) -> None:
@@ -473,6 +473,51 @@ def run_job(state: dict, study_dir: Path, folder: Path, model_id: str, case_id: 
             "grading": grading, "retried": False}
 
 
+def verify_model_bindings(state: dict, directory: Path) -> None:
+    if not (directory / "deployment-ready.json").exists():
+        raise HarnessError("Published versions and permission propagation are not verified.")
+    previous = {m["name"]: m for m in json.loads((directory / "models-before.json").read_text())}
+    current = {m["name"]: m for m in cli([
+        "cognitiveservices", "account", "deployment", "list", "--subscription", state["subscription"],
+        "--resource-group", state["resource_group"], "--name", state["account"]])}
+    for model in state["study"]["models"]:
+        old, new = previous[model["deployment"]], current.get(model["deployment"])
+        if (new is None or new["properties"]["provisioningState"] != "Succeeded"
+                or new["properties"]["model"] != old["properties"]["model"] or new["sku"] != old["sku"]):
+            raise HarnessError("A selected deployment's model/version/SKU/capacity changed before the run.")
+
+
+def smoke_study(args) -> None:
+    if not args.allow_paid_invocations:
+        raise HarnessError("Explicit --allow-paid-invocations required before any remote requests.")
+    state = load_state(args.study_dir)
+    if len(state["study"]["models"]) != 1 or args.max_invocations != 2:
+        raise HarnessError("Smoke verification requires one model and --max-invocations 2.")
+    verify_model_bindings(state, args.study_dir)
+    output = args.study_dir / "smoke"
+    output.mkdir(exist_ok=False)
+    model = state["study"]["models"][0]["id"]
+    records = []
+    try:
+        for number, case_id in enumerate(["gate", "implement"], 1):
+            if datetime.now(timezone.utc) >= datetime.fromisoformat(state["launch_cutoff_utc"]):
+                raise HarnessError("Launch cutoff reached; no further smoke requests.")
+            record = run_job(state, args.study_dir, output / f"{number:03d}-{model}-{case_id}", model, case_id)
+            records.append(record)
+            save(output / f"record-{number:03d}.json", record)
+            print(f"SMOKE {model}/{case_id}: {record['status']}", flush=True)
+            if record["status"] != "completed_correct":
+                raise HarnessError("Smoke verification failed; stop without retries or additional requests.")
+        save(output / "result.json", {
+            "status": "verified", "records": records, "request_attempts": len(records),
+            "scope": "One readiness and one implementation request; not a full model comparison.",
+            "full_battery_rerun": False, "client_retries": 0,
+        })
+    except (HarnessError, EvaluationInfrastructureError, OSError, ValueError, KeyError) as error:
+        save(output / "failure.json", {"error": str(error), "records": records, "retried": False})
+        raise
+
+
 def run_study(args) -> None:
     if not args.allow_paid_invocations:
         raise HarnessError("Explicit --allow-paid-invocations required before any remote requests.")
@@ -482,17 +527,7 @@ def run_study(args) -> None:
         raise HarnessError(f"Confirm --max-invocations {maximum} for the frozen roster.")
     if state["registered_full_schedule"] != full_schedule(state["study"]):
         raise HarnessError("The frozen schedule differs from the registered battery.")
-    if not (args.study_dir / "deployment-ready.json").exists():
-        raise HarnessError("Published versions and permission propagation are not verified.")
-    previous = {m["name"]: m for m in json.loads((args.study_dir / "models-before.json").read_text())}
-    current = {m["name"]: m for m in cli([
-        "cognitiveservices", "account", "deployment", "list", "--subscription", state["subscription"],
-        "--resource-group", state["resource_group"], "--name", state["account"]])}
-    for model in state["study"]["models"]:
-        old, new = previous[model["deployment"]], current.get(model["deployment"])
-        if (new is None or new["properties"]["provisioningState"] != "Succeeded"
-                or new["properties"]["model"] != old["properties"]["model"] or new["sku"] != old["sku"]):
-            raise HarnessError("A selected deployment's model/version/SKU/capacity changed before the run.")
+    verify_model_bindings(state, args.study_dir)
     output = args.study_dir / "full"
     output.mkdir(exist_ok=False)
     eligible, paused, records = [], set(), []
@@ -565,7 +600,7 @@ def audit_study(args) -> None:
     output.mkdir(parents=True, exist_ok=False)
     versions = json.loads((args.study_dir / "versions.json").read_text())
     checked = []
-    run_directory = state.get("run_kind", "pilot")
+    run_directory = getattr(args, "run_kind", None) or state.get("run_kind", "pilot")
     for folder in sorted((args.study_dir / run_directory).iterdir()):
         if not folder.is_dir() or not (folder / "response.json").exists():
             continue
@@ -758,14 +793,17 @@ def main(argv: list[str] | None = None) -> int:
     deployment.add_argument("--study-dir", type=Path, required=True)
     deployment.add_argument("--allow-azure-writes", action="store_true")
     deployment.add_argument("--allow-project-role-grants", action="store_true")
-    run = commands.add_parser("run")
-    run.add_argument("--study-dir", type=Path, required=True)
-    run.add_argument("--allow-paid-invocations", action="store_true")
-    run.add_argument("--max-invocations", type=int, required=True)
+    for name in ("run", "smoke"):
+        run = commands.add_parser(name)
+        run.add_argument("--study-dir", type=Path, required=True)
+        run.add_argument("--allow-paid-invocations", action="store_true")
+        run.add_argument("--max-invocations", type=int, required=True)
     for command in ("audit", "report"):
         analysis = commands.add_parser(command)
         analysis.add_argument("--study-dir", type=Path, required=True)
         analysis.add_argument("--output-dir", type=Path, required=True)
+        if command == "audit":
+            analysis.add_argument("--run-kind", choices=["full", "smoke"])
     work = commands.add_parser("_worker", help="Internal bounded worker; not a retry/recovery command.")
     work.add_argument("--job", type=Path, required=True)
     work.add_argument("--allow-paid-invocations", action="store_true")
@@ -777,6 +815,8 @@ def main(argv: list[str] | None = None) -> int:
             deploy(args)
         elif args.command == "run":
             run_study(args)
+        elif args.command == "smoke":
+            smoke_study(args)
         elif args.command == "audit":
             audit_study(args)
         elif args.command == "report":

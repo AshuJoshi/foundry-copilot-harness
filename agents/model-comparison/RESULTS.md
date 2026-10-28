@@ -4,6 +4,11 @@
 This is a point-in-time snapshot of the model versions and deployment
 configurations listed below.
 
+The battery used the earlier GitHub-named preview contract. The source now
+authors new agents with the Microsoft-named public-preview contract. A quick
+compatibility check is not a rerun of this nine-model battery; these scores
+and measurements remain the original point-in-time results.
+
 Sol6.1, Astra, Terra5.6 and Terra6.1 met all 18 task-output contracts in this
 battery. Other configurations exposed differences in structured delivery,
 calculation and whether a requested file was delivered.

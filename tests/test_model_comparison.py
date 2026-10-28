@@ -11,6 +11,7 @@ from unittest.mock import patch
 
 from harness_client import HarnessClient, HarnessError, ResponseError
 from scripts import compare_models as study
+from retail_support import definition_for_rest, selected
 
 
 class ComparisonTests(unittest.TestCase):
@@ -117,6 +118,44 @@ class ComparisonTests(unittest.TestCase):
         self.assertFalse(tools["default_config"]["enabled"])
         self.assertEqual({x["name"] for x in tools["configs"]},
                          {"filesystem_read", "filesystem_write", "shell"})
+        self.assertEqual(first["harness"]["type"], "microsoft_copilot_preview")
+        self.assertEqual(tools["type"], "microsoft_copilot_toolset_preview")
+
+    def test_authoring_casing_normalizes_without_mutation_or_discriminator_migration(self):
+        for harness in ["microsoft_copilot_preview", "github_copilot_preview"]:
+            for toolset in ["microsoft_copilot_toolset_preview", "github_copilot_toolset_preview"]:
+                authored = {"kind": "prompt", "harness": {"type": harness}, "tools": [{
+                    "type": toolset, "defaultConfig": {"enabled": False},
+                    "configs": [{"name": "shell", "enabled": True}]},
+                    {"type": "mcp", "defaultConfig": {"unrelated": True}}]}
+                before = json.dumps(authored)
+                expected = definition_for_rest(authored)
+                self.assertEqual(json.dumps(authored), before)
+                self.assertEqual(expected["harness"]["type"], harness)
+                self.assertEqual(expected["tools"][0]["type"], toolset)
+                self.assertEqual(expected["tools"][0]["default_config"], {"enabled": False})
+                self.assertNotIn("defaultConfig", expected["tools"][0])
+                self.assertEqual(expected["tools"][1], authored["tools"][1])
+                self.assertEqual(definition_for_rest(expected), expected)
+        with self.assertRaisesRegex(HarnessError, "both"):
+            definition_for_rest({"tools": [{"type": "microsoft_copilot_toolset_preview",
+                                           "defaultConfig": {"enabled": False},
+                                           "default_config": {"enabled": True}}]})
+
+    def test_published_definition_comparison_uses_rest_casing_but_checks_capabilities_exactly(self):
+        folder = self.root / "casing"
+        manifest = study.render("https://example.services.ai.azure.com/api/projects/p",
+                                "one", "comparison", folder)
+        authored = manifest["services"]["comparison"]
+        self.assertIn("defaultConfig", authored["tools"][0])
+        record = {"version": "1", "status": "active", "definition": study.definition(manifest)}
+        client = HarnessClient("https://example.services.ai.azure.com/api/projects/p", "sub", "comparison")
+        with patch.object(client, "_verified_version", return_value="1"), \
+             patch.object(client, "get_agent", return_value={"versions": {"latest": record}}):
+            self.assertEqual(selected(client, folder / "azure.yaml"), record)
+            record["definition"]["tools"][0]["configs"][0]["enabled"] = False
+            with self.assertRaisesRegex(HarnessError, "differs"):
+                selected(client, folder / "azure.yaml")
 
     def test_scored_prompt_and_inputs_do_not_leak_oracles_or_model_names(self):
         state = self.state(2)
@@ -233,6 +272,54 @@ class ComparisonTests(unittest.TestCase):
         result = json.loads((self.root / "full/result.json").read_text())
         self.assertEqual(result["status"], "launch_cutoff_reached")
         self.assertFalse(result["complete_scored_coverage"])
+
+    def test_smoke_submits_only_readiness_and_implementation_and_stays_separate(self):
+        state = self.state(1)
+        models = self.models(state)
+        (self.root / "models-before.json").write_text(json.dumps(models))
+        (self.root / "deployment-ready.json").write_text("{}")
+        calls = []
+
+        def job(state, directory, folder, model, case):
+            folder.mkdir()
+            calls.append(case)
+            return {"model": model, "case": case, "status": "completed_correct",
+                    "grading": {"correct": True}}
+
+        with patch.object(study, "load_state", return_value=state), \
+             patch.object(study, "cli", return_value=models), patch.object(study, "run_job", side_effect=job), \
+             redirect_stdout(io.StringIO()):
+            study.smoke_study(argparse.Namespace(
+                study_dir=self.root, allow_paid_invocations=True, max_invocations=2))
+        self.assertEqual(calls, ["gate", "implement"])
+        self.assertFalse((self.root / "full").exists())
+        result = json.loads((self.root / "smoke/result.json").read_text())
+        self.assertFalse(result["full_battery_rerun"])
+        self.assertEqual(result["request_attempts"], 2)
+
+    def test_smoke_requires_approval_one_model_and_exact_count_and_stops_on_failed_gate(self):
+        with patch.object(study, "load_state") as load:
+            with self.assertRaises(HarnessError):
+                study.smoke_study(argparse.Namespace(allow_paid_invocations=False))
+            load.assert_not_called()
+        state = self.state(2)
+        with patch.object(study, "load_state", return_value=state), patch.object(study, "cli") as cli:
+            with self.assertRaisesRegex(HarnessError, "one model"):
+                study.smoke_study(argparse.Namespace(
+                    study_dir=self.root, allow_paid_invocations=True, max_invocations=2))
+            cli.assert_not_called()
+        state = self.state(1)
+        models = self.models(state)
+        (self.root / "models-before.json").write_text(json.dumps(models))
+        (self.root / "deployment-ready.json").write_text("{}")
+        with patch.object(study, "load_state", return_value=state), \
+             patch.object(study, "cli", return_value=models), \
+             patch.object(study, "run_job", return_value={"status": "service_or_contract_failure"}) as job:
+            with self.assertRaisesRegex(HarnessError, "Smoke verification failed"):
+                study.smoke_study(argparse.Namespace(
+                    study_dir=self.root, allow_paid_invocations=True, max_invocations=2))
+            job.assert_called_once()
+        self.assertTrue((self.root / "smoke/failure.json").exists())
 
     def test_wrong_budget_is_rejected_before_cloud_preflight(self):
         state = self.state(2)

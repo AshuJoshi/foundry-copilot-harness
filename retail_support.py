@@ -1,6 +1,7 @@
 """Recording and input-integrity helpers shared by retail execution and audit."""
 from __future__ import annotations
 
+import copy
 import json
 from pathlib import Path
 import urllib.parse
@@ -95,6 +96,17 @@ def verify_consumption(response: dict, command: str, expected: dict, *, allow_sh
     raise HarnessError("No successful receiver-side attachment hash script and matching hashes found.")
 
 
+def definition_for_rest(definition: JsonObject) -> JsonObject:
+    value = copy.deepcopy(definition)
+    for tool in value.get("tools", []):
+        if tool.get("type") in {"microsoft_copilot_toolset_preview", "github_copilot_toolset_preview"}:
+            if "defaultConfig" in tool:
+                if "default_config" in tool:
+                    raise HarnessError("Copilot toolset declares both defaultConfig and default_config.")
+                tool["default_config"] = tool.pop("defaultConfig")
+    return value
+
+
 def selected(client: HarnessClient, manifest: Path) -> dict:
     config = json.loads(manifest.read_text())
     agents = [s for s in config["services"].values() if s.get("host") == "azure.ai.agent"]
@@ -108,8 +120,8 @@ def selected(client: HarnessClient, manifest: Path) -> dict:
     if result["version"] != version:
         result = json.loads(client._request(client._agent_path + "/versions/" +
                                            urllib.parse.quote(version, safe="")))
-    expected = {k: agent[k] for k in ["kind", "model", "harness", "instructions", "skills", "tools"]
-                if k in agent}
+    expected = definition_for_rest({
+        k: agent[k] for k in ["kind", "model", "harness", "instructions", "skills", "tools"] if k in agent})
     actual = dict(result["definition"])
     for definition in [expected, actual]:
         if definition.get("tools") == []:

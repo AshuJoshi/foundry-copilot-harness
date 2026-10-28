@@ -1,4 +1,4 @@
-# Copilot Harness for Foundry Agent Service
+# Microsoft Copilot Harness for Foundry Agent Service
 
 Build agents that research companies, analyze changing business evidence and
 deliver files your application can use, without implementing the agent
@@ -6,6 +6,9 @@ execution loop yourself.
 
 Start with company research using Web IQ. Then explore a retail analyst and
 compare how model and instruction choices affect agent behavior.
+
+These agents use the Microsoft Copilot harness public-preview authoring
+contract. See the [official setup guide](https://learn.microsoft.com/azure/foundry/agents/how-to/use-tools-skills-copilot-harness?pivots=azd).
 
 ## Choose an example
 
@@ -114,6 +117,26 @@ Use an existing Foundry project. A project does not necessarily contain a model
 deployment: reuse a supported deployment or deploy a model before creating the
 agent.
 
+### Public-preview compatibility
+
+- Use azd 1.37.0+ and the agent extension 1.0.0-beta.22+. The
+  [installation guide](agents/company-research/README.md#install-and-check-the-tools)
+  covers the bundle, versions and shell preview opt-in.
+- Set `AZD_ALPHA_ENABLE_AGENTS_MANAGED_HARNESS=true` in each shell or CI job
+  that runs harness deployment commands.
+- New templates use `microsoft_copilot_preview`. The shared client also
+  accepts existing `github_copilot_preview` agents without rewriting them.
+  Harness selection is fixed at creation during this preview; use a distinct
+  new name rather than changing the harness of an existing agent.
+- Copilot toolset settings use `defaultConfig` in `azure.yaml` and
+  `default_config` in persisted REST definitions. The comparison checks
+  normalize only that field and still verify the exact tool capabilities.
+- The shared REST client sends `Foundry-Features: MicrosoftCopilot=V1Preview`.
+  Responses remain agent-scoped, with explicit conversations and pinned versions.
+
+These are compatibility updates, not changes to task instructions, tool
+permissions, Web IQ, Skill content, data policies or grading.
+
 You will need:
 
 - Python 3.12+, Git, Azure CLI (`az`) and Azure Developer CLI (`azd`).
@@ -126,6 +149,11 @@ You will need:
 
 Web IQ has its own setup and terms. It is not automatically provisioned with
 the harness, and it is not required for retail or model comparison.
+
+Disabling a harness Web tool is not network isolation when Shell is enabled.
+Task instructions constrain intended behavior, not network egress. Foundry
+supports [separate egress policies](https://learn.microsoft.com/azure/foundry/agents/how-to/use-tools-skills-copilot-harness#control-network-egress);
+these agents do not create or attach one.
 
 Model deployment and agent deployment are separate operations. The agent uses
 the deployment name you supply; it should not silently create or resize a model.

@@ -170,6 +170,8 @@ an existing agent. These steps do not create or resize a model deployment.
 This step changes Azure resources:
 
 ```bash
+export AZD_ALPHA_ENABLE_AGENTS_MANAGED_HARNESS=true
+
 (
   set -e
   cd .local/retail-deploy
@@ -186,8 +188,14 @@ This step changes Azure resources:
 ```
 
 The rendered service key is your agent name. Check that the version is active,
-uses your intended model and includes the `github_copilot_preview` harness.
+uses your intended model and includes the `microsoft_copilot_preview` harness.
 Record its numeric version and `instance_identity.principal_id`.
+
+Use a distinct new name for this template; the public preview doesn't support
+changing an existing agent's harness. The client also accepts unchanged legacy
+GitHub-harness agents. No explicit toolset block has been added to retail:
+its existing tools, instructions, transaction policy and four-step task remain
+unchanged. The shared client supplies the current preview header.
 
 The caller needs Foundry data-plane access. An administrator should also check
 the agent instance identity's project-scoped file access. If it needs Foundry

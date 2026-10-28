@@ -173,7 +173,7 @@ class DiligenceTests(unittest.TestCase):
                                "model", "connection", root / "valid", agent_name="research", skill_version="2")
             value = json.loads(output.read_text())
             self.assertEqual(value["services"]["company-research-agent"]["harness"],
-                             {"type": "github_copilot_preview"})
+                             {"type": "microsoft_copilot_preview"})
             self.assertEqual(value["services"]["company-research-agent"]["tools"][0]["allowed_tools"],
                              ["web", "news", "browse"])
 
