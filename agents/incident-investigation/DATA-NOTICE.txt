@@ -1,0 +1,41 @@
+RCAEval recorded telemetry subset
+
+Authors: Luan Pham, Hongyu Zhang, Huong Ha, Flora Salim, Xiuzhen Zhang.
+RCAEval: A Benchmark for Root Cause Analysis of Microservice Systems with
+Telemetry Data. Companion Proceedings of the ACM Web Conference, 2025.
+
+Original dataset: https://doi.org/10.5281/zenodo.14590730
+Original record declares Creative Commons Attribution 4.0 International:
+https://creativecommons.org/licenses/by/4.0/
+Preserve the original attribution and applicable license terms.
+
+Converted source: https://huggingface.co/datasets/phamquiluan/RCAEval
+Revision: afeacb11bcc94dadfd1c8f483ee4377b2b8b614e.
+The conversion's dataset card separately declares MIT.
+Review both sources' terms before redistributing data; this notice does not
+resolve their differing declarations or grant additional rights.
+
+Preparation selects a recorded case, converts Parquet tables to CSV, adds
+evidence_row_id, and splits the complete trace table into two row-preserving
+shards. No sampling, imputation or diagnosis is performed. Upstream case names,
+fault labels and injection timestamps are excluded from model-facing packages.
+These are controlled fault experiments, not production customer outages.
+No endorsement by the authors is implied.
+
+MIT License
+Copyright (c) 2024 Luan Pham
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.

@@ -16,6 +16,7 @@ contract. See the [official setup guide](https://learn.microsoft.com/azure/found
 |---------|----------------|----------------|
 | **[Company research with Web IQ](agents/company-research/README.md)** | An agent that researches a public company, runs illustrative calculations and delivers a cited brief | Connect research tools, attach a Skill and work with generated files |
 | **[Retail analyst](agents/retail-analysis/README.md)** | An agent that recalculates transaction data and updates its assessment as evidence arrives | Combine code execution, interpretation and explicit revisions to earlier conclusions |
+| **[Incident investigator](agents/incident-investigation/README.md)** | An agent that investigates recorded logs, metrics and traces and delivers an evidence-backed diagnosis | Build verified data Skills, distinguish symptoms from causes and independently check exact evidence cells |
 | **[Model comparison](agents/model-comparison/README.md)** | A neutral agent configuration evaluated with different model bindings | Compare task completion, output formats, execution behavior, latency and reported usage |
 
 Company research is the recommended starting point. Its outputs are easy to
@@ -34,7 +35,7 @@ The previews use fictional research content and reproducible scenario values.
 Actual run outputs, responses and logs stay under `.local/`, which is excluded
 by [.gitignore](.gitignore). Do not move those run directories into source.
 
-All three agent definitions, local configuration/preparation tools, runners
+All four agent definitions, local configuration/preparation tools, runners
 and offline tests are available. Each guide separates local checks from Azure
 deployment and paid invocation.
 
@@ -63,6 +64,19 @@ usage. No Web IQ connection is required.
 The [verified comparison results](agents/model-comparison/RESULTS.md) distinguish
 task-output mistakes from client interruptions and show where model choices
 changed the result.
+
+## Investigate recorded incidents
+
+The [incident guide](agents/incident-investigation/README.md) prepares pinned
+public telemetry from controlled microservice fault injection, publishes three
+complete data/analysis Skills and runs one advisory investigation.
+The agent delivers a diagnosis and report with exact source-cell references,
+alternatives, uncertainty and a falsifiable next test. Independent checks verify
+input and artifact integrity; human review still assesses the explanation.
+
+This is not a production-monitoring connection or an automated remediation
+agent. The migration has passed local input rebuild checks; a new deployed-agent
+verification is a separate, explicitly authorized step.
 
 ## How it works
 
@@ -218,4 +232,6 @@ Only this authored verification summary belongs in source control.
 
 Source code and documentation are available under the [MIT license](LICENSE).
 The retail dataset has its own [CC BY 4.0 attribution and data notice](agents/retail-analysis/DATA-NOTICE.txt).
+Incident telemetry has separate original/conversion license declarations,
+preserved in its [data notice](agents/incident-investigation/DATA-NOTICE.txt).
 Azure, model and Web IQ service access and terms are separate from this source license.

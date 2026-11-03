@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "repository": "phamquiluan/RCAEval",
+  "revision": "afeacb11bcc94dadfd1c8f483ee4377b2b8b614e",
+  "cases": [
+    {
+      "id": "case-001",
+      "upstream_case": "re3ob_cartservice_f1_1",
+      "trace_split_after": 76467,
+      "files": [
+        {"name": "logs.parquet", "bytes": 117073, "sha256": "daba5217f71f5a595e28cf9d5a3bda414d6e0cfaf19aa754a24aad9c14677a63", "rows": 65025, "columns": 3, "csv_sha256": "2a5c909dc42754987c5b374a70c727edf09a71296f1bd520d4d852654ceeb75e"},
+        {"name": "metrics.parquet", "bytes": 148622, "sha256": "f48dbce429636dfabb33f5695f0992d91c92b97c4b3031cfe0606a37bf49221c", "rows": 1441, "columns": 70, "csv_sha256": "148122e24c86c3c69a31e52e2d15f62a3711b7a48d8c63fce1f52b64074d8432"},
+        {"name": "traces.parquet", "bytes": 4094874, "sha256": "13bb4dfddce23145579f9189e125d72463b5045348dfb6f6cf247b21b4f43cfa", "rows": 148799, "columns": 11, "csv_sha256": "1082dd65a5c2345855c4d4b64ca6c59b57d66f43890972e11733f8590b6d5cf9"}
+      ]
+    },
+    {
+      "id": "case-002",
+      "upstream_case": "re3ob_adservice_f3_1",
+      "trace_split_after": 82651,
+      "files": [
+        {"name": "logs.parquet", "bytes": 129908, "sha256": "d8fb490a359db7cda3ce618ce51251ceec89b90026839f90a891391e3d51b197", "rows": 70558, "columns": 3, "csv_sha256": "b7eb1e7e13600b5cf2da1d1666cbcbb416ccde23cb6c3d4d889baea51eef7b55"},
+        {"name": "metrics.parquet", "bytes": 149939, "sha256": "79548b07b082297d85b061ff8a9269e85f7522bd721c167274eb748b36d4b084", "rows": 1441, "columns": 70, "csv_sha256": "0d2be8169178aec30fb413706d7e48ced27a75d8eccc2b2ed38f0e2fb05b7f28"},
+        {"name": "traces.parquet", "bytes": 4516189, "sha256": "6ec516a79bbd427766b02d0d87f06ea9ec15d0b990f4d65f74283e341e70eda7", "rows": 165302, "columns": 11, "csv_sha256": "0114d43bfab68ed2c12d4bd7ed7205b1f0ae4e4d00dcf396dbf73c5c6a923ec6"}
+      ]
+    },
+    {
+      "id": "case-003",
+      "upstream_case": "re3ob_emailservice_f2_1",
+      "trace_split_after": 83262,
+      "files": [
+        {"name": "logs.parquet", "bytes": 128884, "sha256": "d757fe9f0b7c6a6cde4914ccd9eb7fb820ed0c52a134b41d3e2f0f2821893541", "rows": 71072, "columns": 3, "csv_sha256": "1b43b1800429fbd9ac1cf5272ec82d5b643cf013c0ffca63002d40f3c06c9ede"},
+        {"name": "metrics.parquet", "bytes": 143009, "sha256": "6a7f8b6e407552a15040a046118ea32acdc0e077837092b8e8bf2b530a4b7fdd", "rows": 1441, "columns": 69, "csv_sha256": "04effba8870a6306d191dea853bda103039dfdc67231dbce3e881661c572e3c7"},
+        {"name": "traces.parquet", "bytes": 4515053, "sha256": "1299b20b28f154a3a9029c350a410cc53302b87d0ffe1540e2b68533bc4bd4a0", "rows": 166523, "columns": 11, "csv_sha256": "81ea6d4ca51e9a38a95f76086975811208056eeaf50b2c9128966a746bcbc4ce"}
+      ]
+    }
+  ]
+}
