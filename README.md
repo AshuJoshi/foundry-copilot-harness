@@ -80,19 +80,19 @@ This is not a production-monitoring connection or an automated remediation
 agent. All three pinned cases passed local and committed-source rebuild checks.
 A new case-001 agent was deployed and physically invoked once; its two actual
 files, six cited records and read-only response/file audit passed. See the
-[verification scope](agents/incident-investigation/README.md#migration-verification-status)
+[observed results](agents/incident-investigation/README.md#observed-results)
 for the independent review and the distinction from the two preparation-only cases.
 
 ## How it works
 
-The [instruction-selection experiment](agents/instruction-selection/README.md#new-public-preview-verification-november-3-2026)
+The [instruction-selection experiment](agents/instruction-selection/README.md#observed-results-november-3-2026)
 has a separately verified twelve-request trial with fixed prompts and model.
 Successful visible Python computation appeared in 2/6 neutral and 6/6
 tool-preferring trials; all twelve final answers were checked. This small
 experiment illustrates instruction sensitivity, not a universal execution
 guarantee.
 
-The [incident-review workflow](agents/incident-review/README.md#migration-status)
+The [incident-review workflow](agents/incident-review/README.md#observed-results)
 has a separately recorded live check of natural peer review and a planted-error
 control. Its self-review trial stopped on a critique contract failure; the
 failure is retained, not counted as a completed baseline or evidence that
@@ -223,25 +223,15 @@ projects 1.0.0-beta.15 and Skills 1.0.0-beta.9.
 | Retail analysis | Four real stages; arithmetic, source-cell and claim-update checks; all eight delivered files independently re-fetched |
 | Model comparison | One readiness and one implementation request with Sol6.1; delivered code passed 43/43 Docker checks; both responses and their files independently audited |
 
-These were **seven requests with no client resubmissions**, against three
-distinct new Microsoft-harness agents in the existing projects. Existing
-agents and model deployments were preserved. Web IQ, Skill content, task
-instructions, data policies, fixtures and graders were unchanged.
+These were **seven requests with no client resubmissions**. The checks used
+committed source and included 132 passing offline tests without skips,
+including the actual Docker grader controls. Web IQ, Skill content and the
+task contracts remained unchanged.
 
-The checks used an owner-created clean Git-only export of
-[compatibility source commit 150bcec](https://github.com/AshuJoshi/foundry-copilot-harness/commit/150bceca63fa762d09549043a846e4ce5f03c05f),
-which also passed **132 offline tests without skips**, including the actual
-Docker grader controls. Research was initially deployed from the preceding
-compatibility commit and verified against this corrected source without a
-redeployment; its definition was unchanged. The correction handles the API's
-persisted MCP allow-list representation, not a tool-permission change.
-
-Retail reused previously prepared, pinned data after verifying its hashes and
-references; this check did not download or rebuild the workbook. The tooling
-was upgraded in an existing environment, not installed on a fresh machine.
-These checks do not rerun or supersede the
-[dated nine-model battery](agents/model-comparison/RESULTS.md). Mechanical
-output checks do not certify every narrative claim.
+Retail reused hash-verified prepared data; this check did not rebuild the
+workbook or validate a fresh tooling installation. The comparison smoke is
+separate from the [dated nine-model battery](agents/model-comparison/RESULTS.md).
+Mechanical output checks do not certify every narrative claim.
 
 Raw verification responses, reports and logs remain under ignored `.local/`.
 Only this authored verification summary belongs in source control.

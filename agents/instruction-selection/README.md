@@ -44,9 +44,8 @@ preference, not tool permissions or an enforced execution requirement.
 Reference answers belong to the controller/evaluator, not the agent prompt.
 The entire experiment definition is not uploaded to the agent.
 
-The driver reuses current recording helpers instead of importing the old
-exploration workspace. It records source fingerprints but executes no Git
-commands. Owner-created committed-source export validation is a separate step.
+The driver records source fingerprints and exact version bindings for each
+run. Use committed source when comparing configurations.
 
 ## 1. Offline checks
 
@@ -172,32 +171,14 @@ Review actual commands, exit codes, stdout and the entire final answer:
 - Token totals/cache subsets are not a verified dollar-cost calculation.
 - Same prompt/configuration does not guarantee the same execution path.
 
-## Historical result and migration status
+## Observed results: November 3, 2026
 
-The earlier research experiment completed twelve calls on October 19, 2026.
-Successful visible Python computation appeared in **2/6 neutral** and
-**6/6 tool-preferring** runs. All twelve final answers matched independent
-references. That was a small, separate experiment, not part of the later
-nine-model battery or a comparison against another harness.
+With Sol5.6 in Canada Central, neutral instructions produced successful
+visible Python computation in **2/6 trials**, while the tool preference
+produced it in **6/6**. All twelve final answers were correct.
 
-This migration preserves the exact prompts, reference values, schedule and
-single instruction suffix. Historical raw runs were not copied into public
-source. The original 2/6 versus 6/6 outcome is not promised for future runs.
-
-### New public-preview verification: November 3, 2026
-
-The owner committed the migrated source as
-[22a5eae](https://github.com/AshuJoshi/foundry-copilot-harness/commit/22a5eae989e402f301f3a33ba3fa7bfd15967ae4).
-Its clean Git-only export matched all 80 reviewed source files and passed
-**214 offline tests without skips**, including existing Docker and PyArrow
-controls. The exact original experiment file, neutral instructions and
-schedule were checked for preservation.
-
-With explicit approval, a distinct new Microsoft-harness agent was deployed
-in the existing Canada Central project, using the existing model deployment.
-Neutral and tool-preferring profiles were pinned as two immutable versions
-of that same new agent. Their persisted definitions differed only in the
-single instruction preference; both versions remained active and accessible.
+The profiles were pinned as two immutable versions of the same agent.
+Their persisted definitions differed only in the single instruction preference.
 
 The registered twelve requests completed, each in a distinct conversation,
 with no client resubmissions. Read-only retrieval independently matched all
@@ -215,17 +196,15 @@ All eight visible Python calculations exited zero with the independently
 expected result. The four remaining neutral responses had no visible parent
 tool calls. No private reasoning or recall mechanism was inferred.
 
-This new trial reproduced the earlier behavioral observation, but the two
-rounds were not pooled. Two repetitions per task/profile are still a small
-probe, not evidence of statistical significance, a general tool-use guarantee
-or superiority over another harness. No sampling/reasoning-effort override,
-Skill or external connection was introduced.
+Two repetitions per task/profile are a small probe, not evidence of
+statistical significance, a general tool-use guarantee or superiority over
+another harness. No sampling/reasoning-effort override, Skill or external
+connection was introduced. An earlier October 19 trial observed the same
+2/6 versus 6/6 pattern; those requests are separate and not pooled here.
 
-All 23 pre-existing agents and five model deployments remained unchanged.
-One new agent with two pinned versions was added. The initial preflight
-detected a changed shell-default subscription and stopped before any write;
-subsequent commands used the approved subscription explicitly without changing
-the global default. That preflight stop was not a failed model trial.
+The committed source passed 214 offline tests without skips, including the
+existing Docker and PyArrow controls. These checks validate the implementation,
+not the probability of a future agent choosing the same method.
 
 All concrete manifests, responses, reports and logs belong under ignored
 `.local/`. Do not commit actual run outputs. The deployed experiment agent

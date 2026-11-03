@@ -20,12 +20,9 @@ No reviewer must invent an objection. `agree`, `revise` and
 `insufficient_evidence` are valid evidence-dependent outcomes. Passing hashes
 and schemas does not establish causal correctness or that two agents are better.
 
-The historical private-preview peer workflow completed four calls. Its
-challenger agreed with an already strong diagnosis. A separate planted-error
-control detected three intended problem types. Historical self-review completed
-its four useful stages using six actual calls, including a blocked filename
-turn and diagnostic; it was not an equal-cost four-call comparison.
-Those observations are not fresh public-preview results from this migration.
+The [observed results](#observed-results) include completed peer/control
+workflows and a self-review attempt that stopped on an output-contract error.
+Use that distinction when evaluating the baseline.
 
 ## Source and artifact boundaries
 
@@ -65,7 +62,7 @@ obtain `publication.json`. Reuse that verified publication rather than
 publishing new Skills merely to add reviewer roles.
 
 Use the same model and exact Skill versions for the investigator and challenger.
-This initial migration preserves case-001 only for the review experiment.
+This bounded review experiment uses case-001.
 Telemetry attribution and download terms are in the
 [incident data notice](../incident-investigation/DATA-NOTICE.txt).
 Raw telemetry and run outputs are not committed.
@@ -148,14 +145,13 @@ challenger arguments and `--mode self-review-control --allow-four-paid-invocatio
 Neither mode requires an investigator invocation.
 
 Stages stop at a failed execution, materialization, upload or validation check.
-No request is automatically retried. The historical diagnostic/completion
-commands were not migrated. Preserve failed runs and inspect remote state;
+No request is automatically retried. Preserve failed runs and inspect remote state;
 local HTTP timeouts do not cancel remote execution or cap billing.
 
 Outputs include separate stage directories, actual downloaded diagnosis/critique
 files, reports, frozen bindings, receiver hashes and request/response records.
-All remain beneath ignored `.local/`. Sources record hashes; Git-export
-verification and commit provenance remain owner-controlled, not internal Git calls.
+All remain beneath ignored `.local/`. Use committed source and preserve the
+recorded source fingerprints with each run.
 
 ## 5. Audit and judge the result
 
@@ -185,21 +181,13 @@ and whether any improvement justifies extra calls/time/usage. Compare with
 self-review without pretending different histories are identical experiments.
 Planted errors are controls, never natural model mistakes.
 
-## Migration status
+## Observed results
 
-The migration was committed as
-[7937b6e](https://github.com/AshuJoshi/foundry-copilot-harness/commit/7937b6e2127c4065507bbd93888406cd71c67c4d).
-Its owner-created clean Git-only export passed **200 offline tests without
-skips**, including the existing Docker and PyArrow controls. Original role
-instructions, contracts, fixture bytes and validator logic were retained;
-new manifests use the Microsoft harness name and the current shared client.
-Historical one-off diagnostics and completion commands were not imported.
-
-On **November 3, 2026 (Pacific time)**, three distinct new role agents were
-deployed in the existing Canada Central project, using the same existing
-model and previously verified case-001 Skills pinned at immutable version 5.
-No model, project or Skill was created or republished for this check.
-Required project-scoped instance-identity grants were checked separately.
+**Testing date: November 3, 2026 (Pacific time).** Three roles used the same
+Sol5.6 deployment in Canada Central and identical pinned case-001 Skills.
+The natural workflow revised two concrete claims; the planted-error control
+identified all three intended problem types. The self-review attempt stopped
+on an output-contract error rather than producing an unchecked revision.
 
 | Live mode | Actual requests | Outcome | Independent verification |
 |-----------|----------------:|---------|--------------------------|
@@ -239,7 +227,7 @@ one failed self-review contract. They do not establish superiority over a
 complete matched-budget self-review baseline, statistical reliability, or
 successful remediation. Mechanical checks do not certify every narrative claim.
 
-All **20 pre-existing agents and five model deployments** were retained
-unchanged. The three new agents remain deployed. Raw responses, reports,
-telemetry, audit downloads and failed-run evidence remain under ignored
-`.local/`; only this curated summary belongs in source control.
+The committed source passed 200 offline tests without skips, including the
+existing Docker and PyArrow controls. Raw responses, reports, telemetry,
+audit downloads and failed-run evidence remain under ignored `.local/`;
+only this curated summary belongs in source control.

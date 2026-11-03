@@ -265,8 +265,8 @@ python -m scripts.run_incident \
 Before invoking, the runner checks the prepared input packages, verified
 publication and exact pinned agent definition. It records source hashes,
 prompt and conversation, and saves the request before submission.
-It never runs Git commands. Committed-source provenance is a separate
-owner-controlled export/verification step, not an invented commit field.
+Source fingerprints are saved with the run. Use committed source and keep
+the original preparation and publication records for independent auditing.
 
 The default 900-second timeout controls HTTP/polling, not a hard total
 wall-clock or billing bound and not remote cancellation. After an uncertain
@@ -302,24 +302,11 @@ Read the diagnosis/report and ask:
 4. Does the next test say what would change the conclusion?
 5. Are missing evidence, proposed mitigation and unobserved recovery explicit?
 
-## Migration verification status
+## Observed results
 
-The migrated local preparation path downloaded and rebuilt **all three cases**
-from the pinned public source on November 2, 2026 (Pacific time). Complete CSV
-hashes match the retained historical identities, typed conversion/shard checks
-passed, and each complete package set passed its standalone verifier.
-
-The owner then committed the source as
-[4dcc1fa](https://github.com/AshuJoshi/foundry-copilot-harness/commit/4dcc1fa0c774c113de2c28cd31256f27b7d38f35).
-Its clean Git-only export passed **175 offline tests without skips**, including
-the existing Docker and PyArrow controls. All three package sets were rebuilt
-from that export using explicitly imported, verified pinned source downloads;
-every package file and preparation record matched the earlier local build.
-
-With separate approval, case-001's rebuilt packages were published as new
-immutable Skill versions and downloaded byte-for-byte. A distinct new
-Microsoft-harness agent was deployed in the existing Canada Central project
-using the existing model deployment. One actual investigation request completed:
+**Testing date: November 2, 2026 (Pacific time).** One case-001 request using
+Sol5.6 in Canada Central delivered an evidence-backed cartservice diagnosis
+and readable report. The three data Skills were pinned to immutable versions.
 
 | Check | Result |
 |-------|--------|
@@ -328,7 +315,6 @@ using the existing model deployment. One actual investigation request completed:
 | Diagnosis evidence | Six cited original records checked across logs, metrics and traces |
 | Independent audit | Same response content and exact file bytes re-fetched without invoking |
 | Qualified explanation | Cartservice/Int32 overflow supported; exact parse operand and upstream input source remain unproven |
-| Resource preservation | All 19 prior agents and five model deployments retained unchanged |
 
 Independent full-input review confirmed 394 oversized cart requests, 394
 overflow logs and 394 failed frontend AddItem spans, alongside 419 normal
@@ -337,12 +323,15 @@ Caller-span start times and log timestamps have different precision; the
 temporal/operation correlation does not establish exact causal ordering.
 No mitigation, production impact or recovery was demonstrated.
 
-This was **one paid request, with no resubmissions**, not a three-case rerun
-or a population accuracy benchmark. Cases 002/003 remain preparation-verified
-in this migration; their newly rebuilt packages were not published or invoked.
-Earlier research runs remain separate historical evidence. The published agent
-and its pinned Skill versions are source-verification facts, not version
-numbers to copy into another deployment.
+All three cases were downloaded and rebuilt from the pinned public inputs.
+Complete CSV hashes, typed roundtrips, trace preservation and standalone
+package verification passed. The committed source also passed 175 offline
+tests without skips, and package rebuilds reproduced every file.
+
+Only case-001 was published and invoked in this check: **one paid request,
+with no resubmissions**. Cases 002/003 passed preparation checks but were not
+invoked. This is not a population accuracy benchmark. Use your own verified
+Skill and agent versions rather than copying historical version numbers.
 
 All downloaded data, generated packages, concrete configurations, responses,
 reports and audits stay under ignored `.local/`. Do not check them in.
