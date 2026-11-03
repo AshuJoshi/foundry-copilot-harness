@@ -84,6 +84,12 @@ for the independent review and the distinction from the two preparation-only cas
 
 ## How it works
 
+The [incident-review workflow](agents/incident-review/README.md#migration-status)
+has a separately recorded live check of natural peer review and a planted-error
+control. Its self-review trial stopped on a critique contract failure; the
+failure is retained, not counted as a completed baseline or evidence that
+multiple agents are generally better.
+
 The harness supplies the interaction loop between a model and its available
 capabilities. You configure the task, tools and reusable Skills. The agent can
 inspect results, choose further actions, execute code and deliver artifacts.

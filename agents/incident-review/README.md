@@ -187,7 +187,59 @@ Planted errors are controls, never natural model mistakes.
 
 ## Migration status
 
-Source and offline validation are being migrated from the previously tested
-research workflow. No new live peer/self-review/control result is implied by
-these files. New clean-export deployment and explicitly approved invocations
-must be recorded separately before publishing fresh performance claims.
+The migration was committed as
+[7937b6e](https://github.com/AshuJoshi/foundry-copilot-harness/commit/7937b6e2127c4065507bbd93888406cd71c67c4d).
+Its owner-created clean Git-only export passed **200 offline tests without
+skips**, including the existing Docker and PyArrow controls. Original role
+instructions, contracts, fixture bytes and validator logic were retained;
+new manifests use the Microsoft harness name and the current shared client.
+Historical one-off diagnostics and completion commands were not imported.
+
+On **November 3, 2026 (Pacific time)**, three distinct new role agents were
+deployed in the existing Canada Central project, using the same existing
+model and previously verified case-001 Skills pinned at immutable version 5.
+No model, project or Skill was created or republished for this check.
+Required project-scoped instance-identity grants were checked separately.
+
+| Live mode | Actual requests | Outcome | Independent verification |
+|-----------|----------------:|---------|--------------------------|
+| Natural peer review | 4 | Completed; critique requested revision with two findings and five accepted claims | Four responses and eight output files re-fetched; task, input hashes, exact evidence and file bytes checked |
+| Planted-error control | 2 | Completed; six findings covered all three intended problem types; three claims retained | Two responses and four output files re-fetched; fixture wrapper/rubric excluded from model input |
+| Self-review | 3 | Stopped after self-critique failed the existing evidence-use contract; final revision not submitted | All three responses and six delivered files re-fetched; execution/receiver checks passed, original critique rejection preserved |
+
+There were **nine actual paid requests and zero resubmissions** against a
+planned ten-request schedule. The natural workflow used four distinct
+conversations, the control used two, and self-review used three turns in one
+conversation. This is not a completed four-call self-review baseline.
+
+### What the critique established
+
+In the natural workflow, the challenger identified an unproven request-level
+log/span match and an onset metric described as a baseline. The investigator's
+revision explicitly accepted both qualifications. The bounded cartservice
+overflow conclusion remained supported; exact upstream input provenance and
+request-level linkage remained unknown. Timestamp precision also limits exact
+ordering claims.
+
+In the planted-error control, manual review found all three predeclared problem
+types: caller symptoms treated as conclusive origin, span status treated as
+HTTP, and pre-failure metrics treated as demonstrated restart/recovery.
+The six findings overlap; they are not six independent planted bugs.
+This is one human-authored control, not a population accuracy estimate.
+
+Self-review's self-check added useful baseline and full-window information.
+However, its critique included evidence `C8` without referencing it from any
+finding or accepted claim. The unchanged validator rejected that output.
+The original failure and files were retained; no validator relaxation, output
+editing or replacement model request turned it into a success. Its final
+revision was not executed.
+
+These results demonstrate working peer/control handoffs and safe stopping on
+one failed self-review contract. They do not establish superiority over a
+complete matched-budget self-review baseline, statistical reliability, or
+successful remediation. Mechanical checks do not certify every narrative claim.
+
+All **20 pre-existing agents and five model deployments** were retained
+unchanged. The three new agents remain deployed. Raw responses, reports,
+telemetry, audit downloads and failed-run evidence remain under ignored
+`.local/`; only this curated summary belongs in source control.
