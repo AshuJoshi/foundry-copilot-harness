@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "repetitions": 2,
+  "tool_preference_suffix": "\n\nWhen the user asks for computation, data transformation, debugging, or code execution, prefer using the tools instead of answering from memory.",
+  "cases": [
+    {
+      "id": "primes",
+      "prompt": "How many prime numbers are there below one million?",
+      "expected_integer": 78498
+    },
+    {
+      "id": "multiplication",
+      "prompt": "What is 48271 multiplied by 79613?",
+      "expected_integer": 3842999123
+    },
+    {
+      "id": "modular-power",
+      "prompt": "What is 7^77 mod 1,000,003?",
+      "expected_integer": 51477
+    }
+  ]
+}

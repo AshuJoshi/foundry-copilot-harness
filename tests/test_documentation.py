@@ -67,6 +67,7 @@ class DocumentationTests(unittest.TestCase):
         paths = [ROOT / "README.md", GUIDE, RETAIL_GUIDE, COMPARISON_GUIDE,
                  ROOT / "agents/incident-investigation/README.md",
                  ROOT / "agents/incident-review/README.md",
+                 ROOT / "agents/instruction-selection/README.md",
                  COMPARISON_GUIDE.parent / "RESULTS.md",
                  *PREVIEW.glob("*.md"), SKILL_ROOT / "SKILL.md"]
         for path in paths:
@@ -86,7 +87,8 @@ class DocumentationTests(unittest.TestCase):
     def test_documented_shell_blocks_are_valid_bash_without_executing_them(self):
         for path in [ROOT / "README.md", GUIDE, RETAIL_GUIDE, COMPARISON_GUIDE, PREVIEW / "README.md",
                      ROOT / "agents/incident-investigation/README.md",
-                     ROOT / "agents/incident-review/README.md"]:
+                     ROOT / "agents/incident-review/README.md",
+                     ROOT / "agents/instruction-selection/README.md"]:
             for block in re.findall(r"```bash\n(.*?)```", path.read_text(), re.S):
                 result = subprocess.run(
                     ["bash", "-n"], input=block, text=True, capture_output=True, timeout=10)

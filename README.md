@@ -18,6 +18,7 @@ contract. See the [official setup guide](https://learn.microsoft.com/azure/found
 | **[Retail analyst](agents/retail-analysis/README.md)** | An agent that recalculates transaction data and updates its assessment as evidence arrives | Combine code execution, interpretation and explicit revisions to earlier conclusions |
 | **[Incident investigator](agents/incident-investigation/README.md)** | An agent that investigates recorded logs, metrics and traces and delivers an evidence-backed diagnosis | Build verified data Skills, distinguish symptoms from causes and independently check exact evidence cells |
 | **[Incident review](agents/incident-review/README.md)** | Investigator/challenger roles with a planted-error control and single-agent self-review baseline | Validate file handoffs and evidence-backed critique without assuming more agents improve accuracy |
+| **[Instruction selection](agents/instruction-selection/README.md)** | Two versions of the same agent differing only in a tool-use preference | Compare visible execution behavior with fixed prompts, model and capabilities |
 | **[Model comparison](agents/model-comparison/README.md)** | A neutral agent configuration evaluated with different model bindings | Compare task completion, output formats, execution behavior, latency and reported usage |
 
 Company research is the recommended starting point. Its outputs are easy to
@@ -36,7 +37,7 @@ The previews use fictional research content and reproducible scenario values.
 Actual run outputs, responses and logs stay under `.local/`, which is excluded
 by [.gitignore](.gitignore). Do not move those run directories into source.
 
-All five agent workflows, local configuration/preparation tools, runners
+All six agent workflows, local configuration/preparation tools, runners
 and offline tests are available. Each guide separates local checks from Azure
 deployment and paid invocation.
 
