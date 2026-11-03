@@ -75,8 +75,11 @@ alternatives, uncertainty and a falsifiable next test. Independent checks verify
 input and artifact integrity; human review still assesses the explanation.
 
 This is not a production-monitoring connection or an automated remediation
-agent. The migration has passed local input rebuild checks; a new deployed-agent
-verification is a separate, explicitly authorized step.
+agent. All three pinned cases passed local and committed-source rebuild checks.
+A new case-001 agent was deployed and physically invoked once; its two actual
+files, six cited records and read-only response/file audit passed. See the
+[verification scope](agents/incident-investigation/README.md#migration-verification-status)
+for the independent review and the distinction from the two preparation-only cases.
 
 ## How it works
 
