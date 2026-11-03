@@ -1,0 +1,31 @@
+{
+  "fixture_kind": "deliberately_flawed_proposal_not_model_output",
+  "evaluator_only": true,
+  "case_id": "case-001",
+  "diagnosis": {
+    "schema_version": 1,
+    "case_id": "case-001",
+    "status": "supported",
+    "originating_service": "frontend",
+    "mechanism": "The frontend is conclusively the original source of the bad quantity because its client span failed. The span statusCode 9 is an HTTP response code.",
+    "evidence": [
+      {"id": "E1", "file": "traces.csv", "evidence_row_id": 83590, "observed_values": {"serviceName": "frontend", "statusCode": "9"}, "observation": "A frontend client span has nonzero status.", "relevance": "Claimed proof of upstream origin."},
+      {"id": "E2", "file": "logs.csv", "evidence_row_id": 35377, "observed_values": {"container_name": "cartservice"}, "observation": "A cartservice log is present.", "relevance": "Another service records an observation."},
+      {"id": "E3", "file": "metrics.csv", "evidence_row_id": 700, "observed_values": {"frontend_error": "0"}, "observation": "One metric record has zero frontend errors.", "relevance": "Claimed proof of recovery."}
+    ],
+    "alternatives": [
+      {"hypothesis": "Storage-path failure", "evidence_ids": ["E2"], "assessment": "Dismissed without inspecting the exception."},
+      {"hypothesis": "Caller symptom", "evidence_ids": ["E1"], "assessment": "Dismissed because frontend is the client."}
+    ],
+    "next_test": {"action": "Inspect request provenance.", "would_change_diagnosis_if": "A different upstream creator is found."},
+    "mitigation": {"action": "Restart frontend.", "risks": "Interruption.", "verification_and_rollback": "The restart already restored normal service, as demonstrated by metric row 700."},
+    "limitations": ["Upstream request provenance and deployment events were not supplied."]
+  },
+  "expected_objections": [
+    {"id": "source-attribution", "claim_pointer": "/mechanism", "criterion": "A failed client span does not establish who created the input. Distinguish observed failure boundary from ultimate upstream creator.", "reference_records": [{"file": "traces.csv", "evidence_row_id": 83590}, {"file": "logs.csv", "evidence_row_id": 35342}, {"file": "logs.csv", "evidence_row_id": 35377}]},
+    {"id": "status-semantics", "claim_pointer": "/mechanism", "criterion": "Do not interpret span statusCode 9 as an HTTP response code.", "reference_records": [{"file": "traces.csv", "evidence_row_id": 83590}]},
+    {"id": "invented-recovery", "claim_pointer": "/mitigation/verification_and_rollback", "criterion": "Metric row 700 is pre-transition baseline, not evidence of an executed restart or recovery. Withhold claims of mitigation success.", "reference_records": [{"file": "metrics.csv", "evidence_row_id": 700}, {"file": "metrics.csv", "evidence_row_id": 783}]}
+  ],
+  "report": "Deliberately flawed proposal for review: E1 E2 E3. This is not a real model run.",
+  "scoring_boundary": "Expected-objection coverage requires manual semantic review. Matching keywords, agreement, or valid citations alone is not a pass."
+}
