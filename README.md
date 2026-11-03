@@ -85,6 +85,13 @@ for the independent review and the distinction from the two preparation-only cas
 
 ## How it works
 
+The [instruction-selection experiment](agents/instruction-selection/README.md#new-public-preview-verification-november-3-2026)
+has a separately verified twelve-request trial with fixed prompts and model.
+Successful visible Python computation appeared in 2/6 neutral and 6/6
+tool-preferring trials; all twelve final answers were checked. This small
+experiment illustrates instruction sensitivity, not a universal execution
+guarantee.
+
 The [incident-review workflow](agents/incident-review/README.md#migration-status)
 has a separately recorded live check of natural peer review and a planted-error
 control. Its self-review trial stopped on a critique contract failure; the

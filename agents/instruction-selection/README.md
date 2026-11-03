@@ -182,8 +182,50 @@ nine-model battery or a comparison against another harness.
 
 This migration preserves the exact prompts, reference values, schedule and
 single instruction suffix. Historical raw runs were not copied into public
-source. New clean-export and live verification must be recorded separately;
-the original 2/6 versus 6/6 outcome is not promised for future runs.
+source. The original 2/6 versus 6/6 outcome is not promised for future runs.
+
+### New public-preview verification: November 3, 2026
+
+The owner committed the migrated source as
+[22a5eae](https://github.com/AshuJoshi/foundry-copilot-harness/commit/22a5eae989e402f301f3a33ba3fa7bfd15967ae4).
+Its clean Git-only export matched all 80 reviewed source files and passed
+**214 offline tests without skips**, including existing Docker and PyArrow
+controls. The exact original experiment file, neutral instructions and
+schedule were checked for preservation.
+
+With explicit approval, a distinct new Microsoft-harness agent was deployed
+in the existing Canada Central project, using the existing model deployment.
+Neutral and tool-preferring profiles were pinned as two immutable versions
+of that same new agent. Their persisted definitions differed only in the
+single instruction preference; both versions remained active and accessible.
+
+The registered twelve requests completed, each in a distinct conversation,
+with no client resubmissions. Read-only retrieval independently matched all
+twelve responses and their single original user turns. Manual inspection
+checked the full answers, actual commands, exit codes and stdout:
+
+| Task | Neutral successful Python trials | Tool-preferring successful Python trials | Correct final answers |
+|------|---------------------------------:|-----------------------------------------:|----------------------|
+| Prime count | 0/2 | 2/2 | 4/4 |
+| Multiplication | 0/2 | 2/2 | 4/4 |
+| Modular power | 2/2 | 2/2 | 4/4 |
+| **Total** | **2/6** | **6/6** | **12/12** |
+
+All eight visible Python calculations exited zero with the independently
+expected result. The four remaining neutral responses had no visible parent
+tool calls. No private reasoning or recall mechanism was inferred.
+
+This new trial reproduced the earlier behavioral observation, but the two
+rounds were not pooled. Two repetitions per task/profile are still a small
+probe, not evidence of statistical significance, a general tool-use guarantee
+or superiority over another harness. No sampling/reasoning-effort override,
+Skill or external connection was introduced.
+
+All 23 pre-existing agents and five model deployments remained unchanged.
+One new agent with two pinned versions was added. The initial preflight
+detected a changed shell-default subscription and stopped before any write;
+subsequent commands used the approved subscription explicitly without changing
+the global default. That preflight stop was not a failed model trial.
 
 All concrete manifests, responses, reports and logs belong under ignored
 `.local/`. Do not commit actual run outputs. The deployed experiment agent
