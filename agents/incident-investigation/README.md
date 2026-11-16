@@ -82,15 +82,15 @@ PyArrow runs in the local preparation environment, not the agent sandbox.
 
 ## 1. Prepare local tooling
 
-Run from the repository root in Linux or WSL with Python 3.12+.
+Run from the repository root in Linux or WSL with the shared
+[uv-managed Python 3.12 environment](../../README.md#local-python-environment)
+activated.
 See the [shared CLI installation guide](../company-research/README.md#install-and-check-the-tools)
 for azd and the Foundry extensions. Public-preview deployment requires the
 shell opt-in and compatible tools.
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements-incident.txt
+uv pip install -r requirements-incident.txt
 python -m unittest discover -s tests -p 'test_*incident*.py' -v
 ```
 
@@ -189,6 +189,9 @@ The publisher rechecks source/package fingerprints and input verification,
 publishes once per Skill, downloads each returned immutable version and
 compares every file byte. It does not retry an ambiguous publication.
 The resulting `publication.json` supplies the exact three versions.
+On success, the command prints `Published and verified 3 Skills`, the returned
+versions and the publication-record path. This publishes Azure Skill versions;
+it does not deploy or invoke an agent.
 For another case, publish its package set separately and render an agent
 version pinned to that publication. Never mix cases across the three Skills.
 

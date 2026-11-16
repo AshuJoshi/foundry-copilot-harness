@@ -53,15 +53,17 @@ For example:
 | [Research tests](../../tests/test_company_research.py) | Configuration, calculation and mocked execution/output checks |
 | [Client tests](../../tests/test_harness_client.py) | Transport, response completion, file references and error handling |
 
-Run the commands below from the repository root in Bash or WSL. Python 3.12+,
-Azure CLI (`az`) and Azure Developer CLI (`azd`) are required for the remote
-workflow. The Python scripts use only the standard library.
+Run the commands below from the repository root in Bash or WSL, with the shared
+[uv-managed Python 3.12 environment](../../README.md#local-python-environment)
+activated. Azure CLI (`az`) and Azure Developer CLI (`azd`) are required for
+the remote workflow. The Python scripts use only the standard library.
 
 ## Install and check the tools
 
 Install the tools in the environment where you will run these commands:
 
-- [Python 3.12 or later](https://www.python.org/downloads/).
+- [Python 3.12](https://www.python.org/downloads/), the verified workflow version.
+- [uv](https://docs.astral.sh/uv/getting-started/installation/) for the shared local environment.
 - [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) for sign-in
   and project role assignments.
 - [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd)
@@ -69,8 +71,9 @@ Install the tools in the environment where you will run these commands:
 
 The instructions use Bash. With VS Code connected to WSL, install the tools
 inside WSL rather than assuming a Windows installation is available there.
-The source does not require `pip install`, a virtual environment or a
-coding-agent extension.
+Company research needs no additional Python packages or coding-agent extension.
+The shared environment keeps interpreter selection consistent across examples;
+it does not install Azure CLI or azd.
 
 Install the Foundry extensions from azd's official registry:
 
@@ -124,7 +127,7 @@ supports the new public-preview contract.
 
 ## Check the calculator locally
 
-From the repository root, using Python 3.12+:
+From the repository root, with the shared Python 3.12 environment activated:
 
 ```bash
 python3 skills/company-research/calculate_scenarios.py

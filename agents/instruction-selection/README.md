@@ -49,7 +49,8 @@ run. Use committed source when comparing configurations.
 
 ## 1. Offline checks
 
-Run from the repository root with Python 3.12+:
+Activate the shared [uv-managed Python 3.12 environment](../../README.md#local-python-environment)
+and run from the repository root. No additional Python packages are needed:
 
 ```bash
 python3 -m unittest discover -s tests -p 'test_method_selection.py' -v

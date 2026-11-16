@@ -67,7 +67,10 @@ Telemetry attribution and download terms are in the
 [incident data notice](../incident-investigation/DATA-NOTICE.txt).
 Raw telemetry and run outputs are not committed.
 
-Run offline controls from the repository root:
+Activate the shared [uv-managed Python 3.12 environment](../../README.md#local-python-environment)
+and run offline controls from the repository root. Incident preparation
+dependencies are covered by the foundation guide; the review controller needs
+no additional Python packages:
 
 ```bash
 python3 -m unittest discover -s tests -p 'test_incident_review*.py' -v

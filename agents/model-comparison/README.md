@@ -94,7 +94,8 @@ and quota, and choose a new deployment name before using a model-creation API.
 
 ## Prerequisites
 
-- Python 3.12+ on Linux or WSL.
+- The shared [uv-managed Python 3.12 environment](../../README.md#local-python-environment)
+  on Linux or WSL. The controller needs no additional Python packages.
 - Azure CLI, Azure Developer CLI and the Foundry extensions. See
   [tool installation](../company-research/README.md#install-and-check-the-tools).
 - An existing Foundry project and the model deployments in your roster.

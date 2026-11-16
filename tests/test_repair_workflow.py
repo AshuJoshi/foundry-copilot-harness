@@ -1,3 +1,5 @@
+from contextlib import redirect_stdout
+import io
 import json
 from pathlib import Path
 import shutil
@@ -72,6 +74,26 @@ class RepairWorkflowTests(unittest.TestCase):
                 configure_repair.configure(ENDPOINT, "sub", "model", "repair-test",
                                            {}, self.root / "invalid")
             network.assert_not_called()
+
+    def test_configuration_cli_explains_local_output_and_frozen_settings(self):
+        output = self.root / "configuration-cli"
+        stdout = io.StringIO()
+        with redirect_stdout(stdout), patch.object(RecordingClient, "_request") as network:
+            code = configure_repair.main([
+                "--project-endpoint", ENDPOINT, "--subscription", "sub",
+                "--model-deployment", "model", "--agent-name", "repair-test",
+                "--publication", str(self.publication), "--output-dir", str(output)])
+            network.assert_not_called()
+        self.assertEqual(code, 0)
+        text = stdout.getvalue()
+        self.assertIn("Configuration written:", text)
+        self.assertIn(str(output / "azure.yaml"), text)
+        self.assertIn("Agent: repair-test", text)
+        self.assertIn("Model: model", text)
+        for skill in SKILLS:
+            self.assertIn(f"{skill}: version 4", text)
+        self.assertIn("No Azure resources changed", text)
+        self.assertIn("No agent deployed or invoked", text)
 
     def test_preflight_exact_definition_pins_and_publication(self):
         with patch.object(run_software_repair, "verify_prepared", return_value=self.verified), \
@@ -177,21 +199,33 @@ class RepairWorkflowTests(unittest.TestCase):
                             Path(args[args.index("--output-dir") + 1]))
             return "downloaded"
         output = self.root / "published"
+        stdout = io.StringIO()
         with patch.object(publish_repair_skills, "verify_prepared", return_value=self.verified), \
-             patch.object(publish_incident_skills, "command", side_effect=command) as write:
-            publish_repair_skills.publish(self.prepared, ENDPOINT, output, "create")
+             patch.object(publish_incident_skills, "command", side_effect=command) as write, \
+             redirect_stdout(stdout):
+            code = publish_repair_skills.main([
+                "--prepared-dir", str(self.prepared), "--project-endpoint", ENDPOINT,
+                "--operation", "create", "--output-dir", str(output), "--allow-azure-writes"])
+            self.assertEqual(code, 0)
             self.assertEqual(write.call_count, 4)
         result = json.loads((output / "publication.json").read_text())
         self.assertEqual(result["scenario"], "repair")
         self.assertEqual(result["versions"], self.versions)
+        for skill in SKILLS:
+            self.assertIn(f"{skill}: version 4", stdout.getvalue())
+        self.assertIn("Published and verified 2 Skills", stdout.getvalue())
+        self.assertIn(str(output / "publication.json"), stdout.getvalue())
+        self.assertIn("No agent deployed or invoked", stdout.getvalue())
 
     def test_publication_stops_on_first_write_failure_without_retry(self):
         output = self.root / "failed-publication"
         with patch.object(publish_repair_skills, "verify_prepared", return_value=self.verified), \
-             patch.object(publish_incident_skills, "command", side_effect=HarnessError("ambiguous write")) as write:
+             patch.object(publish_incident_skills, "command", side_effect=HarnessError("ambiguous write")) as write, \
+             redirect_stdout(io.StringIO()) as stdout:
             with self.assertRaisesRegex(HarnessError, "ambiguous"):
                 publish_repair_skills.publish(self.prepared, ENDPOINT, output, "create")
             write.assert_called_once()
+            self.assertNotIn("Published and verified", stdout.getvalue())
         self.assertFalse(json.loads((output / "failure.json").read_text())["retried"])
         self.assertFalse((output / "publication.json").exists())
 

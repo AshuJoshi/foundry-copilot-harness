@@ -158,6 +158,56 @@ Use an existing Foundry project. A project does not necessarily contain a model
 deployment: reuse a supported deployment or deploy a model before creating the
 agent.
 
+### Local Python environment
+
+Use **Python 3.12** for the verified workflow and offline suite. Newer Python
+versions are not fully qualified: an existing source-preservation test uses
+Python's AST representation, which differs in 3.13. That test failure is not
+evidence that model output or grading behavior changed.
+
+The examples use standard-library Python plus per-sample requirements files,
+not a `uv` project with a `pyproject.toml`/`uv.lock`. Use
+[uv](https://docs.astral.sh/uv/getting-started/installation/) to manage one local
+environment. From the repository root, for a new environment:
+
+```bash
+uv venv --python 3.12 .venv &&
+  source .venv/bin/activate &&
+  python --version
+```
+
+Expected: `Python 3.12.x`. `uv` may download a matching interpreter if absent;
+if downloads are restricted, supply an already installed Python 3.12 executable
+instead of `3.12`. No packages are installed globally.
+
+If `.venv` already exists, check `.venv/bin/python --version` first. Reuse it
+only if it is Python 3.12; otherwise choose a different environment directory
+and adjust the activation path. Do not overwrite an existing environment.
+For a new terminal, activate the chosen environment again. Both `python` and
+`python3` then use that environment; `uv pip install` targets the activated
+environment. Run sample commands from the repository root unless told otherwise.
+
+| Workflow | Additional local dependencies |
+|---|---|
+| Company research, instruction selection, model-comparison controller | None |
+| Retail workbook preparation | `requirements-retail.txt` |
+| Incident preparation | `requirements-incident.txt` |
+| Software-repair preparation | `requirements-repair-prep.txt` |
+| Official software-repair Docker grading | `requirements-repair-eval.txt` |
+
+For example, after activation:
+
+```bash
+uv pip install -r requirements-repair-prep.txt
+python -m scripts.prepare_software_repair --help
+```
+
+That installs the pinned preparation dependency and displays local command help;
+it does not download benchmark inputs, publish Skills or invoke an agent.
+The installed top-level dependency pins are not a full transitive lockfile.
+`az` and `azd` are separate command-line tools, not Python dependencies managed
+by this environment.
+
 ### Public-preview compatibility
 
 - Use azd 1.37.0+ and the agent extension 1.0.0-beta.22+. The
@@ -183,7 +233,7 @@ permissions, Web IQ, Skill content, data policies or grading.
 
 You will need:
 
-- Python 3.12+, Git, Azure CLI (`az`) and Azure Developer CLI (`azd`).
+- Python 3.12 for the verified workflow, uv, Git, Azure CLI (`az`) and Azure Developer CLI (`azd`).
 - A Foundry project in a region supporting Copilot harness agents.
 - A model deployment supported by the harness.
 - Permission to create agents and register Skills in that project.
@@ -213,8 +263,8 @@ and keep credentials in the project connection or an approved secret store.
 From the repository root:
 
 ```bash
-python3 skills/company-research/calculate_scenarios.py
-python3 -m unittest discover -s tests -v
+python skills/company-research/calculate_scenarios.py
+python -m unittest discover -s tests -v
 ```
 
 The default checks use the Python standard library, Git and local fixtures.
@@ -222,6 +272,18 @@ Some preparation tests require the sample's optional pinned dependency and
 explicitly skip without it. Tests mock remote operations; they do not sign in,
 deploy resources or invoke an agent. The repair guide separates offline tests
 from authorized official Docker grading.
+
+To enable the local retail, incident and repair preparation fixture tests in
+the activated environment:
+
+```bash
+uv pip install -r requirements-retail.txt \
+  -r requirements-incident.txt -r requirements-repair-prep.txt
+python -m unittest discover -s tests -v
+```
+
+Actual Docker controls require separate image setup and authorization.
+Offline tests, input rebuilding and live agent verification are different stages.
 
 ## Public-preview verification
 

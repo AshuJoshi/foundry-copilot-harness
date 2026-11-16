@@ -22,6 +22,23 @@ PREVIEW = GUIDE.parent / "output-preview"
 
 
 class DocumentationTests(unittest.TestCase):
+    def test_guides_share_verified_python_and_uv_environment(self):
+        readme = (ROOT / "README.md").read_text()
+        self.assertIn("uv venv --python 3.12 .venv", readme)
+        self.assertIn("source .venv/bin/activate", readme)
+        self.assertIn("Newer Python", readme)
+        self.assertIn("not fully qualified", readme)
+        for folder in ["company-research", "retail-analysis", "incident-investigation",
+                       "incident-review", "instruction-selection", "model-comparison", "software-repair"]:
+            text = (ROOT / "agents" / folder / "README.md").read_text()
+            self.assertIn("../../README.md#local-python-environment", text, folder)
+            self.assertNotIn("Python 3.12+", text, folder)
+            self.assertNotIn("python -m pip install", text, folder)
+        for filename in ["requirements-retail.txt", "requirements-incident.txt",
+                         "requirements-repair-prep.txt", "requirements-repair-eval.txt"]:
+            self.assertIn(filename, readme)
+            self.assertTrue((ROOT / filename).is_file())
+
     def test_source_license_does_not_replace_dataset_attribution(self):
         license_text = (ROOT / "LICENSE").read_text()
         self.assertIn("MIT License", license_text)
@@ -95,6 +112,41 @@ class DocumentationTests(unittest.TestCase):
                 result = subprocess.run(
                     ["bash", "-n"], input=block, text=True, capture_output=True, timeout=10)
                 self.assertEqual(result.returncode, 0, (path, result.stderr))
+
+    def test_repair_deployment_stops_on_directory_or_environment_failure(self):
+        guide = ROOT / "agents/software-repair/README.md"
+        block = next(b for b in re.findall(r"```bash\n(.*?)```", guide.read_text(), re.S)
+                     if "cd .local/repair-deployment" in b)
+        stub = (
+            'azd() {\n'
+            '  printf "%s\\n" "$*" >> "$CALL_LOG"\n'
+            '  if [ "$1" = env ] && [ "$2" = new ] && [ "$FAIL_ENV_NEW" = 1 ]; then\n'
+            '    return 7\n'
+            '  fi\n'
+            '}\n'
+        )
+        for scenario in ["missing-directory", "failed-environment", "success"]:
+            with self.subTest(scenario=scenario), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                if scenario != "missing-directory":
+                    (root / ".local/repair-deployment").mkdir(parents=True)
+                log = root / "calls.txt"
+                env = dict(os.environ, CALL_LOG=str(log),
+                           FAIL_ENV_NEW="1" if scenario == "failed-environment" else "0",
+                           AZURE_SUBSCRIPTION_ID="example", AZURE_LOCATION="example",
+                           AZURE_RESOURCE_GROUP="example", FOUNDRY_PROJECT_ARM_ID="example",
+                           FOUNDRY_PROJECT_ENDPOINT="https://example.invalid")
+                result = subprocess.run(["bash", "-c", stub + block], cwd=root, env=env,
+                                        capture_output=True, text=True, timeout=10)
+                calls = log.read_text().splitlines() if log.exists() else []
+                if scenario == "success":
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    self.assertIn("deploy software-repair-agent --no-prompt", calls)
+                else:
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertFalse(any(c.startswith("deploy ") for c in calls))
+                    if scenario == "failed-environment":
+                        self.assertEqual(len(calls), 1)
 
     def test_retail_documentation_uses_existing_modules_and_ignores_run_outputs(self):
         text = RETAIL_GUIDE.read_text()

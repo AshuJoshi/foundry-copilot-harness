@@ -67,16 +67,16 @@ but are not network-egress enforcement; see the repository's
 
 ## 1. Prepare local tooling
 
-Use Python 3.12+, Git and Linux or WSL. Follow the
+Use Python 3.12, Git and Linux or WSL. Follow the shared
+[uv-managed environment setup](../../README.md#local-python-environment) first,
+then the
 [shared CLI setup](../company-research/README.md#install-and-check-the-tools)
 for Azure CLI, azd, the Foundry extension and managed-harness opt-in.
 Docker and SWE-bench are needed only for official local grading, not agent
 deployment. Do not install or change Docker implicitly.
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements-repair-prep.txt
+uv pip install -r requirements-repair-prep.txt
 python -m unittest discover -s tests -p '*software_repair*.py' -v
 ```
 
@@ -170,23 +170,35 @@ runtime verifier output, then publishes each package once and downloads its
 immutable version to compare all bytes. A partial failure stops without
 repeating a write. Configuration pins the versions from verified publication.
 
+On success, publication prints `Published and verified 2 Skills`, each returned
+version and the path to `publication.json`. It changes Azure Skill resources
+but does not deploy or invoke an agent. Configuration prints
+`Configuration written: .../azure.yaml`, the selected agent/model and both
+Skill pins, followed by a local-only message. That filename is output, not a
+command to run. Inspect the generated file before continuing.
+
 Deploy only the repair service:
 
 ```bash
-cd .local/repair-deployment
+(
+  set -e
+  cd .local/repair-deployment
 
-AZURE_DEV_USER_AGENT=microsoft_foundry_skill azd env new repair-example \
-  --subscription "$AZURE_SUBSCRIPTION_ID" \
-  --location "$AZURE_LOCATION" --no-prompt
-AZURE_DEV_USER_AGENT=microsoft_foundry_skill azd env set AZURE_RESOURCE_GROUP "$AZURE_RESOURCE_GROUP"
-AZURE_DEV_USER_AGENT=microsoft_foundry_skill azd env set AZURE_AI_PROJECT_ID "$FOUNDRY_PROJECT_ARM_ID"
-AZURE_DEV_USER_AGENT=microsoft_foundry_skill azd env set FOUNDRY_PROJECT_ENDPOINT "$FOUNDRY_PROJECT_ENDPOINT"
-AZURE_DEV_USER_AGENT=microsoft_foundry_skill azd env set AZURE_AI_PROJECT_ENDPOINT "$FOUNDRY_PROJECT_ENDPOINT"
-AZURE_DEV_USER_AGENT=microsoft_foundry_skill azd deploy software-repair-agent --no-prompt
-AZURE_DEV_USER_AGENT=microsoft_foundry_skill azd ai agent show --output json
-
-cd ../..
+  AZURE_DEV_USER_AGENT=microsoft_foundry_skill azd env new repair-example \
+    --subscription "$AZURE_SUBSCRIPTION_ID" \
+    --location "$AZURE_LOCATION" --no-prompt
+  AZURE_DEV_USER_AGENT=microsoft_foundry_skill azd env set AZURE_RESOURCE_GROUP "$AZURE_RESOURCE_GROUP"
+  AZURE_DEV_USER_AGENT=microsoft_foundry_skill azd env set AZURE_AI_PROJECT_ID "$FOUNDRY_PROJECT_ARM_ID"
+  AZURE_DEV_USER_AGENT=microsoft_foundry_skill azd env set FOUNDRY_PROJECT_ENDPOINT "$FOUNDRY_PROJECT_ENDPOINT"
+  AZURE_DEV_USER_AGENT=microsoft_foundry_skill azd env set AZURE_AI_PROJECT_ENDPOINT "$FOUNDRY_PROJECT_ENDPOINT"
+  AZURE_DEV_USER_AGENT=microsoft_foundry_skill azd deploy software-repair-agent --no-prompt
+  AZURE_DEV_USER_AGENT=microsoft_foundry_skill azd ai agent show --output json
+)
 ```
+
+The subshell stops on a failed directory change or setup command and leaves
+your terminal in the repository root. Deployment success means the agent is
+created, not that it has repaired the task or passed official tests.
 
 Record the active immutable agent version and instance principal. The runner
 checks the exact published definition and Skill pins before invocation.
@@ -244,7 +256,7 @@ Docker daemon and separate authorization. It is not a general untrusted-code
 sandbox. No agent invocation occurs.
 
 ```bash
-python -m pip install -r requirements-repair-eval.txt
+uv pip install -r requirements-repair-eval.txt
 ```
 
 [SWE-bench 4.1.0](../../requirements-repair-eval.txt) is pinned, but its transitive

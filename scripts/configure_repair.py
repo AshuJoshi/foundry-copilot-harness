@@ -46,8 +46,14 @@ def main(argv: list[str] | None = None) -> int:
         if (publication.get("status") != "verified" or publication.get("scenario") != "repair"
                 or publication.get("project_endpoint") != args.project_endpoint):
             raise HarnessError("Require verified repair publication in the selected project.")
-        print(configure(args.project_endpoint, args.subscription, args.model_deployment,
-                        args.agent_name, publication["versions"], args.output_dir))
+        path = configure(args.project_endpoint, args.subscription, args.model_deployment,
+                         args.agent_name, publication["versions"], args.output_dir)
+        print(f"Configuration written: {path}")
+        print(f"Agent: {args.agent_name}")
+        print(f"Model: {args.model_deployment}")
+        for skill in SKILLS:
+            print(f"  {skill}: version {publication['versions'][skill]}")
+        print("Local configuration only. No Azure resources changed. No agent deployed or invoked.")
         return 0
     except (HarnessError, OSError, ValueError, KeyError) as error:
         print(f"ERROR: {error}", file=sys.stderr)

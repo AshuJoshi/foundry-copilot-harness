@@ -157,6 +157,11 @@ def publish_verified(scenario: str, skills: list[str], prepared: Path, endpoint:
             "status": "verified", "scenario": scenario, "project_endpoint": endpoint,
             "versions": versions, "package_sha256": hashes, "input_verification": verified,
         })
+        print(f"Published and verified {len(versions)} Skills:")
+        for skill, version in versions.items():
+            print(f"  {skill}: version {version}")
+        print(f"Publication record: {output / 'publication.json'}")
+        print("Azure Skill versions published and downloaded bytes verified. No agent deployed or invoked.")
     except (HarnessError, OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
         save(output / "failure.json", {
             "status": "stopped", "error": str(error), "retried": False,

@@ -77,27 +77,18 @@ not captured agent-run outputs.
 
 ## 1. Prepare the local environment
 
-Use Python 3.12+ from the repository root. Full workbook preparation needs only
-one additional package, pinned in [requirements-retail.txt](../../requirements-retail.txt):
+Activate the shared [uv-managed Python 3.12 environment](../../README.md#local-python-environment)
+and run from the repository root. Full workbook preparation needs only one
+additional package, pinned in [requirements-retail.txt](../../requirements-retail.txt):
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements-retail.txt
+uv pip install -r requirements-retail.txt
 python -m unittest discover -s tests -v
 ```
 
 The commands use Bash or WSL. The tests use fixtures and scripted service
 responses, not Azure credentials. Without openpyxl, the workbook fixture test
 explicitly skips; that is not complete preparation coverage.
-
-If you prefer uv, the equivalent test command is:
-
-```bash
-uv run --no-project --python 3.12 \
-  --with-requirements requirements-retail.txt \
-  python -m unittest discover -s tests -v
-```
 
 See the [tooling instructions](../company-research/README.md#install-and-check-the-tools)
 for Azure CLI, azd and the Foundry extensions. You do not need the company

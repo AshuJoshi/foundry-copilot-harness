@@ -1,3 +1,5 @@
+from contextlib import redirect_stdout
+import io
 import json
 from pathlib import Path
 import shutil
@@ -33,13 +35,20 @@ class PublicationTests(unittest.TestCase):
         return "downloaded"
 
     def test_all_published_files_compared_and_versions_recorded(self):
+        stdout = io.StringIO()
         with patch.object(publish_skills, "verify_prepared", return_value={"status": "verified"}), \
-             patch.object(publish_skills, "command", side_effect=self.fake_command) as command:
+             patch.object(publish_skills, "command", side_effect=self.fake_command) as command, \
+             redirect_stdout(stdout):
             publish_skills.publish("incident", self.prepared, ENDPOINT, self.output, "update")
         self.assertEqual(command.call_count, 6)
         result = json.loads((self.output / "publication.json").read_text())
         self.assertEqual(result["versions"], {skill: "7" for skill in publish_skills.SKILLS["incident"]})
         self.assertEqual(result["package_sha256"], publish_skills.package_hashes(self.prepared / "packages"))
+        self.assertIn("Published and verified 3 Skills", stdout.getvalue())
+        self.assertIn(str(self.output / "publication.json"), stdout.getvalue())
+        self.assertIn("No agent deployed or invoked", stdout.getvalue())
+        for skill in publish_skills.SKILLS["incident"]:
+            self.assertIn(f"{skill}: version 7", stdout.getvalue())
 
     def test_corrupted_download_stops_without_publication_success(self):
         def corrupt(args, log):
