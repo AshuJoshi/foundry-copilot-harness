@@ -310,6 +310,55 @@ data or saved runs.
 
 Actual pinned-input rebuilding, Skill publication/deployment, a new invocation,
 read-only service audit and official Docker grading are separate verification
-stages. No fresh full-input rebuild, public-layout deployment, paid invocation
-or Docker evaluation is claimed here. Use the preserved evidence from a
-specific run before describing that result as independently reproduced.
+stages. The fresh run below completed all of those stages.
+
+### Observed results: November 16, 2026
+
+The sample was verified from a clean Git-only export of source commit
+`07b031d2016e1891c903e9560fa56f527bc5f85d`, without importing old prepared
+inputs or candidate outputs. The offline suite ran 258 tests with two unrelated
+optional skips using Python 3.12 and PyArrow 21.0.0.
+
+The pinned dataset and repository were downloaded and rebuilt. The complete
+570-file repository and neutral task passed input verification. Both generated
+Skills were newly published and downloaded for exact byte comparison:
+
+| Skill | Published version | Package files | Uncompressed bytes |
+|---|---:|---:|---:|
+| software-repair | 4 | 307 | 2,843,008 |
+| software-repair-repository-data | 3 | 271 | 1,973,301 |
+
+These are versions returned in the verification project, not values to copy
+into another project. Always use your own publication record.
+
+A distinct Microsoft-harness agent used the existing `gpt-5.6-sol` deployment.
+One fresh invocation loaded both Skills, ran the standalone verifier and
+delivered `repair.json` and `report.md`. The candidate changed only
+`src/_pytest/logging.py` and applied cleanly to the pristine repository.
+A separate read-only audit re-fetched the response and both files and
+reconciled their contents with the original download fingerprints.
+
+Fresh official Docker evaluations used the pinned image and verified its
+complete tracked source tree before running:
+
+| Evaluation | Issue test | Existing tests | Resolved |
+|---|---|---|---|
+| Source-unchanged negative control | 1 failed | 15 passed | No, as expected |
+| Benchmark reference fix | 1 passed | 15 passed | Yes |
+| Newly downloaded agent candidate | 1 passed | 15 passed | Yes |
+
+The candidate was graded from its original recorded JSON hash:
+`fe72f7209afe9ed0ac425a541cd2ebdcead71d114809f56fec1c877f2d675bcc`.
+Its decoded patch hash differs from the reference fix's hash; the patches
+are not byte-identical. Both passed this task's required tests, which does not
+establish that their behavior is equivalent for every input.
+
+No candidate was reconstructed from a report or substituted with an older
+artifact. Controls and candidate used separate fresh run/log directories;
+the official reports, summaries, image identities and patch provenance were
+cross-checked after execution. Raw data and execution records remain ignored.
+
+This is one successful real task, not a statistically meaningful repair score,
+an unseen-code guarantee or evidence of general model superiority. The
+original issue gives substantial diagnostic guidance. Agent-side test claims
+remain distinct from these independently observed official results.

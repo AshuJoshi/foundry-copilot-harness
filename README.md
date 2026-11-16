@@ -89,8 +89,10 @@ for the independent review and the distinction from the two preparation-only cas
 The [software-repair example](agents/software-repair/README.md) packages a
 complete pinned repository into two Skills, accepts a source-only patch and
 provides independent official Docker grading with negative/reference controls.
-Its prior single-case research result is separate from fresh verification of
-this public source layout; it is not a general repair benchmark.
+A [fresh single-case verification](agents/software-repair/README.md#observed-results-november-16-2026)
+rebuilt the inputs, invoked a new agent, audited its actual outputs and passed
+the official issue test plus 15 regression tests with independent controls.
+It is not a general repair benchmark or a suite-level model score.
 
 The [instruction-selection experiment](agents/instruction-selection/README.md#observed-results-november-3-2026)
 has a separately verified twelve-request trial with fixed prompts and model.
