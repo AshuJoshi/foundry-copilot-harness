@@ -18,6 +18,7 @@ contract. See the [official setup guide](https://learn.microsoft.com/azure/found
 | **[Retail analyst](agents/retail-analysis/README.md)** | An agent that recalculates transaction data and updates its assessment as evidence arrives | Combine code execution, interpretation and explicit revisions to earlier conclusions |
 | **[Incident investigator](agents/incident-investigation/README.md)** | An agent that investigates recorded logs, metrics and traces and delivers an evidence-backed diagnosis | Build verified data Skills, distinguish symptoms from causes and independently check exact evidence cells |
 | **[Incident review](agents/incident-review/README.md)** | Investigator/challenger roles with a planted-error control and single-agent self-review baseline | Validate file handoffs and evidence-backed critique without assuming more agents improve accuracy |
+| **[Software repair](agents/software-repair/README.md)** | An agent that investigates one pinned repository issue and delivers a source patch | Separate model inputs from benchmark answers, check actual patch application and grade with independent controls |
 | **[Instruction selection](agents/instruction-selection/README.md)** | Two versions of the same agent differing only in a tool-use preference | Compare visible execution behavior with fixed prompts, model and capabilities |
 | **[Model comparison](agents/model-comparison/README.md)** | A neutral agent configuration evaluated with different model bindings | Compare task completion, output formats, execution behavior, latency and reported usage |
 
@@ -37,7 +38,7 @@ The previews use fictional research content and reproducible scenario values.
 Actual run outputs, responses and logs stay under `.local/`, which is excluded
 by [.gitignore](.gitignore). Do not move those run directories into source.
 
-All six agent workflows, local configuration/preparation tools, runners
+All seven agent workflows, local configuration/preparation tools, runners
 and offline tests are available. Each guide separates local checks from Azure
 deployment and paid invocation.
 
@@ -84,6 +85,12 @@ files, six cited records and read-only response/file audit passed. See the
 for the independent review and the distinction from the two preparation-only cases.
 
 ## How it works
+
+The [software-repair example](agents/software-repair/README.md) packages a
+complete pinned repository into two Skills, accepts a source-only patch and
+provides independent official Docker grading with negative/reference controls.
+Its prior single-case research result is separate from fresh verification of
+this public source layout; it is not a general repair benchmark.
 
 The [instruction-selection experiment](agents/instruction-selection/README.md#observed-results-november-3-2026)
 has a separately verified twelve-request trial with fixed prompts and model.
@@ -208,8 +215,11 @@ python3 skills/company-research/calculate_scenarios.py
 python3 -m unittest discover -s tests -v
 ```
 
-These commands use only the Python standard library. The tests mock remote
-operations; they do not sign in, deploy resources or invoke an agent.
+The default checks use the Python standard library, Git and local fixtures.
+Some preparation tests require the sample's optional pinned dependency and
+explicitly skip without it. Tests mock remote operations; they do not sign in,
+deploy resources or invoke an agent. The repair guide separates offline tests
+from authorized official Docker grading.
 
 ## Public-preview verification
 
@@ -242,4 +252,7 @@ Source code and documentation are available under the [MIT license](LICENSE).
 The retail dataset has its own [CC BY 4.0 attribution and data notice](agents/retail-analysis/DATA-NOTICE.txt).
 Incident telemetry has separate original/conversion license declarations,
 preserved in its [data notice](agents/incident-investigation/DATA-NOTICE.txt).
+Repair inputs retain the original repository license; its
+[data notice](agents/software-repair/DATA-NOTICE.txt) distinguishes upstream
+code from issue text and withheld benchmark answers.
 Azure, model and Web IQ service access and terms are separate from this source license.

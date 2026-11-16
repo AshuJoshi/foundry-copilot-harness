@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "case_id": "repair-001",
+  "instance_id": "pytest-dev__pytest-10051",
+  "repository": "pytest-dev/pytest",
+  "base_commit": "aa55975c7d3f6c9f6d7f68accc41bb7cadf0eb9a",
+  "dataset_revision": "c104f840cc67f8b6eec6f759ebc8b2693d585d4a",
+  "dataset_bytes": 2096679,
+  "dataset_sha256": "a45b1fe4e2f0c8390b2b2938ac83e92ed5979000856808f3679c07812e9e6dcd",
+  "case_sha256": "846fada4df002172cf57a28f635b89eba5ee2c215c40c0a8252e81fc3e55bd8e",
+  "repository_files": 570,
+  "repository_tree_sha256": "3012005fa04bfca757a4992d4eb08cbb331a9206abf23f0db5aefecd54568907",
+  "task_sha256": "b45868ffc232a1a1ad205d537e2b008b90afaa1fb9f5f010b56f784984650fd1",
+  "evaluator_version": "4.1.0",
+  "evaluator_image": "swebench/sweb.eval.x86_64.pytest-dev_1776_pytest-10051@sha256:e38365e835d4ba57f3e7331778894f51ac20bf6c5893827065da8657525e123f"
+}

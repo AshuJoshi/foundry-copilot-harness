@@ -114,6 +114,14 @@ def publish(scenario: str, prepared: Path, endpoint: str, output: Path, operatio
         raise HarnessError("Publication operation must be explicit create or update.")
     HarnessClient(endpoint, "endpoint-validation-only", "publication")
     verified = verify_prepared(scenario, prepared)
+    publish_verified(scenario, SKILLS[scenario], prepared, endpoint, output, operation, verified)
+
+
+def publish_verified(scenario: str, skills: list[str], prepared: Path, endpoint: str,
+                     output: Path, operation: str, verified: dict) -> None:
+    if operation not in {"create", "update"}:
+        raise HarnessError("Publication operation must be explicit create or update.")
+    HarnessClient(endpoint, "endpoint-validation-only", "publication")
     output.mkdir(parents=True, exist_ok=False)
     try:
         hashes = package_hashes(prepared / "packages")
@@ -123,7 +131,7 @@ def publish(scenario: str, prepared: Path, endpoint: str, output: Path, operatio
             "publisher_sha256": digest(Path(__file__).read_bytes()), "write_retries": 0,
         })
         versions = {}
-        for skill in SKILLS[scenario]:
+        for skill in skills:
             if package_hashes(prepared / "packages") != hashes:
                 raise HarnessError("Packages changed during publication.")
             raw = command([

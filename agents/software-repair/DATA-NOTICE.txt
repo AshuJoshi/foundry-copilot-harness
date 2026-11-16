@@ -1,0 +1,18 @@
+Pinned pytest repository snapshot, copyright Holger Krekel and others.
+Repository: https://github.com/pytest-dev/pytest
+Commit: aa55975c7d3f6c9f6d7f68accc41bb7cadf0eb9a
+The complete repository LICENSE is preserved in the main package's
+repository/LICENSE and copied into the data-only package. All 570 repository
+files are retained unchanged across the two packages; documentation is separated
+only to respect the Skill file-count limit.
+
+Issue text is acquired from SWE-bench Verified, derived from pytest issue 10051.
+Dataset revision: c104f840cc67f8b6eec6f759ebc8b2693d585d4a.
+Dataset: https://huggingface.co/datasets/princeton-nlp/SWE-bench_Verified
+Issue-text distribution terms require review before public redistribution.
+
+Preparation adds task and verification metadata, without changing repository
+file contents. Reference patches, benchmark test patches, hints and grading
+labels remain in a separate evaluator directory and are excluded from model
+packages. Public benchmark memorization remains possible. No endorsement by
+pytest or SWE-bench authors is implied.
